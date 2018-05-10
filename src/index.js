@@ -1,86 +1,58 @@
-let initializingAutorun = null;
+import Invoice from './Invoice';
+import TaskList from './TaskList';
+import Person from './Person';
+import autorun from './core/autorun';
 
-class ObservableProperty {
-  constructor(value, fullyQualifiedName) {
-    this.value = value;
-    this.fullyQualifiedName = fullyQualifiedName;
-  }
-
-  autoruns = [];
-
-  get() {
-    if (initializingAutorun) {
-      console.log('Adding autorun to', this.fullyQualifiedName);
-      this.autoruns.push(initializingAutorun);
-    }
-    return this.value;
-  }
-
-  set(newValue) {
-    this.value = newValue;
-    for (let i = 0; i < this.autoruns.length; i++) {
-      this.autoruns[i]();
-    }
-  }
-}
-
-function observable(target, name, descriptor) {
-  const { enumerable, configurable, initializer } = descriptor;
-  const value = initializer();
-  const fullyQualifiedName = target.constructor.name + '#' + name;
-  const observableProp = new ObservableProperty(value, fullyQualifiedName);
-  return {
-    enumerable,
-    configurable,
-    get() {
-      return observableProp.get();
-    },
-    set(newValue) {
-      observableProp.set(newValue);
-    },
-  };
-}
-
-function computed(target, name, descriptor) {
-}
-
-function autorun(fn) {
-  initializingAutorun = fn;
-  try {
-    fn();
-  } finally {
-    initializingAutorun = null;
-  }
-}
-
-class Tester {
-  @observable price = 0;
-  @observable amount = 1;
-
-  @computed get total() {
-    return this.price * this.amount;
-  }
-
-  @computed get discountPrice() {
-    return this.total * 0.8;
-  }
-}
-
-const tester = new Tester();
+const invoice = new Invoice();
 
 autorun(() => {
-  console.log('[autorun] price =', tester.price);
+  console.log('[autorun] price =', invoice.price);
 });
 
 autorun(() => {
-  console.log('[autorun] total =', tester.total);
+  console.log('[autorun] total =', invoice.total);
 });
 
 autorun(() => {
-  console.log('[autorun] discount =', tester.discountPrice);
+  console.log('[autorun] discount =', invoice.discountPrice);
 });
 
-tester.price = 100;
-tester.price = 30;
+invoice.price = 100;
+invoice.price = 30;
+invoice.amount = 2;
 
-tester.amount = 2;
+console.log('\n//////////////////////////////////////////////////////\n');
+
+const taskList = new TaskList();
+
+taskList.tasks.push({ title: 'pick up laundry' });
+taskList.tasks.push({ title: 'take medicine' });
+taskList.tasks.push({ title: 'go to supermarket' });
+
+autorun(() => {
+  console.log('[autorun] finished tasks =', taskList.finishedTasks);
+});
+
+taskList.tasks[1].done = true;
+
+console.log('\n//////////////////////////////////////////////////////\n');
+
+const michael = new Person('Michael', 'Reilly', 'Mick');
+
+autorun(() => {
+  console.log('[autorun] Person name changed');
+  if (michael.nickName) {
+    console.log('>> Hello,', michael.nickName);
+  } else {
+    console.log('>> Hello,', michael.fullName);
+  }
+});
+
+michael.nickName = null;
+michael.nickName = 'Micky';
+
+michael.nickName = null;
+michael.lastName = 'Torres';
+
+michael.nickName = 'Mick';
+michael.lastName = 'Torres'; // fixme: should not trigger re-render
