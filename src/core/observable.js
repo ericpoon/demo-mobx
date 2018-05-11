@@ -1,21 +1,44 @@
 import ObservableProperty from './ObservableProperty';
 
 export default function observable(target, name, descriptor) {
-  const { enumerable, configurable, initializer } = descriptor;
-  const fullyQualifiedName = target.constructor.name + '#' + name;
-  let value = undefined;
-  if (initializer) {
-    value = initializer();
+  function getInstanceSpecificPropDescriptor(target, name, classPropDescriptor) {
+    const { enumerable, configurable, initializer } = classPropDescriptor;
+    const fullyQualifiedName = target.constructor.name + '#' + name;
+    let value = undefined;
+    if (initializer) {
+      value = initializer();
+    }
+    const observableProp = new ObservableProperty(value, fullyQualifiedName);
+    return {
+      enumerable,
+      configurable,
+      get() {
+        return observableProp.get();
+      },
+      set(newValue) {
+        observableProp.set(newValue);
+      },
+    };
   }
-  const observableProp = new ObservableProperty(value, fullyQualifiedName);
+
+  // this descriptor will be bound to class level (bound to all instances)
   return {
-    enumerable,
-    configurable,
+    configurable: true,
     get() {
-      return observableProp.get();
+      const desc = getInstanceSpecificPropDescriptor(target, name, descriptor);
+
+      /* whenever an instance is accessed,
+         its property gets rebound with the new instance specific descriptor */
+      Object.defineProperty(this, name, desc);
+      return desc.get();
     },
     set(newValue) {
-      observableProp.set(newValue);
+      const desc = getInstanceSpecificPropDescriptor(target, name, descriptor);
+
+      /* whenever an instance is accessed,
+         its property gets rebound with the new instance specific descriptor */
+      Object.defineProperty(this, name, desc);
+      desc.set(newValue);
     },
   };
 }

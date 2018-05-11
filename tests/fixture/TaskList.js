@@ -1,4 +1,4 @@
-import observable from './core/observable';
+import { observable } from '../../src/core/index';
 
 export default class TaskList {
   @observable tasks = [];

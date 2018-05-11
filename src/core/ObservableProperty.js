@@ -1,9 +1,8 @@
 export default class ObservableProperty {
   static initializingAutorun = null;
 
-  constructor(value, fullyQualifiedName) {
+  constructor(value) {
     this.value = value;
-    this.fullyQualifiedName = fullyQualifiedName;
   }
 
   autoruns = [];
@@ -11,8 +10,9 @@ export default class ObservableProperty {
   get() {
     const autorun = ObservableProperty.initializingAutorun;
     if (autorun && !this.autoruns.includes(autorun)) {
-      console.log('@@@ Adding autorun to', this.fullyQualifiedName);
       this.autoruns.push(autorun);
+      /* two way binding, autorun function also binds this observable,
+         so later autorun function can remove itself from this observable */
       autorun.registeredBy(this);
     }
     return this.value;
