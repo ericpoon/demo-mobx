@@ -1,6 +1,10 @@
 export default class ObservableInterface {
   static initializingAutorun = null;
 
+  constructor(name) {
+    // console.log('>>> Initializing', name);
+  }
+
   get = () => {
   };
 

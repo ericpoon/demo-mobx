@@ -2,9 +2,8 @@ import ObservableInterface from './ObservableInterface';
 
 class ObservableArray extends ObservableInterface {
   constructor(plainArray, name) {
-    super();
+    super(name);
     this._initializeArray(plainArray);
-    console.log('initialized', name);
   }
 
   get = () => {

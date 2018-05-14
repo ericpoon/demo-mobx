@@ -2,11 +2,10 @@ import ObservableProperty from './ObservableProperty';
 import ObservableArray from './ObservableArray';
 
 export default function observable(target, name, descriptor) {
-  function getInstanceSpecificPropDescriptor(target, name, classPropDescriptor) {
+  function getInstanceSpecificPropDescriptor(target, name, classPropDescriptor, value) {
     const { enumerable, configurable, initializer } = classPropDescriptor;
     const fullyQualifiedName = target.constructor.name + '#' + name + '#' + Math.random().toString().substr(2, 4);
-    let value = undefined;
-    if (initializer) {
+    if (!value && initializer) {
       // this is called lazily in current implementation
       value = initializer();
     }
@@ -40,7 +39,7 @@ export default function observable(target, name, descriptor) {
       return desc.get();
     },
     set(newValue) {
-      const desc = getInstanceSpecificPropDescriptor(target, name, descriptor);
+      const desc = getInstanceSpecificPropDescriptor(target, name, descriptor, newValue);
 
       /* whenever an instance is accessed,
          its property gets rebound with the new instance specific descriptor */

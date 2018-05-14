@@ -1,15 +1,5 @@
-import ObservableArray from './core/ObservableArray';
 import observable from './core/observable';
-//
-// const array = new ObservableArray([1, 2, 3]).get();
-//
-// console.log(array);
-// array.push('123');
-// console.log(array);
-// console.log(array.pop());
-// console.log(array);
-// console.log(array.pop());
-// console.log(array);
+import autorun from './core/autorun';
 
 class Tester {
   @observable
@@ -17,6 +7,12 @@ class Tester {
 
 }
 
-const array = new Tester().array;
+const tester = new Tester();
 
-console.log(array.push(1));
+autorun(() => {
+  console.log(Array.from(tester.array));
+});
+
+tester.array.push('Eric');
+tester.array.pop();
+tester.array.pop();
