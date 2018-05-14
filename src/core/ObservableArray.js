@@ -1,16 +1,26 @@
-export default class ObservableArray {
+import ObservableInterface from './ObservableInterface';
+
+class ObservableArray extends ObservableInterface {
   constructor(plainArray, name) {
+    super();
     this._initializeArray(plainArray);
     console.log('initialized', name);
   }
 
   get = () => {
+    this._registerAutorun(this);
     return this.array;
+  };
+
+  set = (plainArray) => {
+    this._initializeArray(plainArray);
+    this._triggerAutorun();
   };
 
   push = (item) => {
     this.array[this.array.length] = item;
     this.array.length += 1;
+    this._triggerAutorun();
     return this.array.length;
   };
 
@@ -18,11 +28,8 @@ export default class ObservableArray {
     this.array.length -= 1;
     const lastItem = this.array[this.array.length];
     delete this.array[this.array.length];
+    this._triggerAutorun();
     return lastItem;
-  };
-
-  set = (plainArray) => {
-    this._initializeArray(plainArray);
   };
 
   _initializeArray(plainArray) {
@@ -44,3 +51,5 @@ export default class ObservableArray {
     }
   }
 }
+
+export default ObservableArray;

@@ -1,4 +1,4 @@
-import ObservableProperty from './ObservableProperty';
+import ObservableInterface from './ObservableInterface';
 
 export default class AutorunFunction {
   constructor(fn) {
@@ -14,11 +14,11 @@ export default class AutorunFunction {
       }
     }
 
-    ObservableProperty.initializingAutorun = this;
+    ObservableInterface.initializingAutorun = this;
     try {
       this._fn();
     } finally {
-      ObservableProperty.initializingAutorun = null;
+      ObservableInterface.initializingAutorun = null;
     }
   }
 

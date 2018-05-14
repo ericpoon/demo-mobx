@@ -11,7 +11,6 @@ export default function observable(target, name, descriptor) {
       value = initializer();
     }
     let observableProp;
-    console.log('hello');
     if (Array.isArray(value)) {
       observableProp = new ObservableArray(value, fullyQualifiedName);
     } else {
