@@ -54,10 +54,6 @@ describe('@observable is initialized correctly', () => {
   });
 });
 
-describe('@observable remains as an observable property after reassignment', () => {
-
-});
-
 describe('@observable decorates class property in an instance-specific manner', () => {
   it('works for primitive values', () => {
     class Tester {
@@ -91,4 +87,10 @@ describe('@observable decorates class property in an instance-specific manner', 
     expect(Array.from(tester1.array)).toEqual(plainArray1);
     expect(Array.from(tester2.array)).toEqual(plainArray2);
   });
+});
+
+describe('@observable remains as an observable property after operations', () => {
+  it('is still observable after reassignment');
+  it('is still observable after array mapping');
+  it('is still observable after array filtering');
 });

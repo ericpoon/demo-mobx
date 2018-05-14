@@ -31,11 +31,23 @@ class ObservableArray extends ObservableInterface {
     return lastItem;
   };
 
+  filter = (fn) => {
+    const plainArr = Array.from(this.array);
+    return new ObservableArray(plainArr.filter(fn)).array;
+  };
+
+  map = (fn) => {
+    const plainArr = Array.from(this.array);
+    return new ObservableArray(plainArr.map(fn)).array;
+  };
+
   _initializeArray(plainArray) {
     this.array = {
       length: 0,
       push: this.push,
       pop: this.pop,
+      filter: this.filter,
+      map: this.map,
     };
 
     Object.keys(this.array).forEach(key => {
