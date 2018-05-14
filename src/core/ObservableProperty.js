@@ -1,28 +1,20 @@
-export default class ObservableProperty {
-  static initializingAutorun = null;
+import ObservableInterface from './ObservableInterface';
 
-  constructor(value) {
+class ObservableProperty extends ObservableInterface {
+  constructor(value, name) {
+    super(name);
     this.value = value;
   }
 
-  autoruns = [];
-
-  get() {
-    const autorun = ObservableProperty.initializingAutorun;
-    if (autorun && !this.autoruns.includes(autorun)) {
-      this.autoruns.push(autorun);
-      /* two way binding, autorun function also binds this observable,
-         so later autorun function can remove itself from this observable */
-      autorun.registeredBy(this);
-    }
+  get = () => {
+    this._registerAutorun(this);
     return this.value;
-  }
+  };
 
-  set(newValue) {
+  set = (newValue) => {
     this.value = newValue;
-    for (let i = 0; i < this.autoruns.length; i++) {
-      const fn = this.autoruns[i];
-      fn.run();
-    }
-  }
+    this._triggerAutorun();
+  };
 }
+
+export default ObservableProperty;
