@@ -1,14 +1,22 @@
 import ObservableProperty from './ObservableProperty';
+import ObservableArray from './ObservableArray';
 
 export default function observable(target, name, descriptor) {
   function getInstanceSpecificPropDescriptor(target, name, classPropDescriptor) {
     const { enumerable, configurable, initializer } = classPropDescriptor;
-    const fullyQualifiedName = target.constructor.name + '#' + name;
+    const fullyQualifiedName = target.constructor.name + '#' + name + '#' + Math.random().toString().substr(2, 4);
     let value = undefined;
     if (initializer) {
+      // this is called lazily in current implementation
       value = initializer();
     }
-    const observableProp = new ObservableProperty(value, fullyQualifiedName);
+    let observableProp;
+    console.log('hello');
+    if (Array.isArray(value)) {
+      observableProp = new ObservableArray(value, fullyQualifiedName);
+    } else {
+      observableProp = new ObservableProperty(value);
+    }
     return {
       enumerable,
       configurable,
