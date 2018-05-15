@@ -3,6 +3,7 @@ import ObservableInterface from './ObservableInterface';
 export default class AutorunFunction {
   constructor(fn) {
     this._fn = fn;
+    Object.defineProperty(this, '_fn', {enumerable: false});
   }
 
   run() {

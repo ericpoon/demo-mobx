@@ -234,4 +234,38 @@ describe('autorun gets triggered properly', () => {
       expect(mockFn).toHaveBeenLastCalledWith('London');
     });
   });
+  describe('autorun works for computed values', () => {
+    let mockFn;
+    let taskList;
+    beforeEach(() => {
+      mockFn = jest.fn();
+      taskList = new TaskList();
+      taskList.tasks.push({ title: 'pick up laundry', done: false });
+      taskList.tasks.push({ title: 'take medicine', done: false });
+      taskList.tasks.push({ title: 'go to supermarket', done: true });
+      autorun(() => mockFn(Array.from(taskList.finishedTasks)));
+    });
+
+    it('triggered when re-assign an observed property', () => {
+      taskList.tasks[0] = { title: 'pick up laundry again', done: true };
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(['pick up laundry again', 'go to supermarket']);
+    });
+
+    it('triggered when re-assign an observed property (deeper)', () => {
+      taskList.tasks[0].done = true;
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(['pick up laundry', 'go to supermarket']);
+      taskList.tasks[2].done = false;
+      expect(mockFn).toHaveBeenCalledTimes(3);
+      expect(mockFn).toHaveBeenLastCalledWith(['pick up laundry']);
+    });
+
+    it('triggered when internally mutate an observed property', () => {
+      taskList.tasks.push({ title: 'go swimming', done: true });
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(['go to supermarket', 'go swimming']);
+    });
+
+  });
 });

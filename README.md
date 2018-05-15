@@ -25,31 +25,6 @@ Or in other words, here's the flow:
 
 ---
 
-As of commit [`c5676be`](https://github.com/ericpoon/demo-mobx/commit/c5676be), `@observable` and `autorun()` should work well enough to support **primitive
+As of commit [`51315bd`](https://github.com/ericpoon/demo-mobx/commit/51315bd), `@observable` and `autorun()` should work well enough to support **primitive
 values, arrays and objects**. Also `@observable` automatically converts array items or object properties into observable properties in a recursive manner. 
 This behaviour is the same as what official MobX library does.
-
-However, at this point, we have not implemented `@computed` yet, so the following code fails:
-```javascript
-class TaskList {
-  @observable tasks = [];
-  get finishedTasks() {
-    return this.tasks.filter(t => t.done).map(t => t.title);
-  }
-}
-
-const taskList = new TaskList();
-taskList.tasks.push({ title: 'pick up laundry' });
-taskList.tasks.push({ title: 'take medicine' });
-autorun(() => {
-  console.log('[autorun] finished tasks =', Array.from(taskList.finishedTasks));
-});
-taskList.tasks[1].done = true; // does not trigger autorun
-```
-
-Autorun is not triggered because in the autorun function `finishedTasks` does not access the `done` peoperty in task items, so the the observable property `done` does not register the *autorun function* in its *autorun function list*, and hence the *autorun function* is not triggered when `done` is changed (setter being called).
-
-To solve this we will introduce `@computed`.
-
-> Note: See we haven't had @computed at this point, but @observable and autorun() have already been very powerful.
-
