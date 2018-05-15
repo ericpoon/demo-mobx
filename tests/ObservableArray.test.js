@@ -68,4 +68,20 @@ describe('ObservableArray supports array-like operations', () => {
     expect(Array.from(finishedTaskList))
       .toEqual(Array.from(taskList).filter(filterFn));
   });
+
+  it('can chain up map and filter - filter.map', () => {
+    const filterFn = task => task.done;
+    const mapFn = task => task.title;
+    const finishedTaskTitles = taskList.filter(filterFn).map(mapFn);
+    expect(Array.from(finishedTaskTitles))
+      .toEqual(Array.from(taskList).filter(filterFn).map(mapFn));
+  });
+
+  it('can chain up map and filter - map.filter', () => {
+    const mapFn = task => task.title;
+    const filterFn = title => title.search(/online course/) > -1;
+    const finishedTaskTitles = taskList.map(mapFn).filter(filterFn);
+    expect(Array.from(finishedTaskTitles))
+      .toEqual(Array.from(taskList).map(mapFn).filter(filterFn));
+  });
 });
