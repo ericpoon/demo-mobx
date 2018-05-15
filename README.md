@@ -37,11 +37,12 @@ class TaskList {
     return this.tasks.filter(t => t.done).map(t => t.title);
   }
 }
+
 const taskList = new TaskList();
 taskList.tasks.push({ title: 'pick up laundry' });
 taskList.tasks.push({ title: 'take medicine' });
 autorun(() => {
-  console.log('[autorun] finished tasks =', taskList.finishedTasks.map(i => i.title));
+  console.log('[autorun] finished tasks =', Array.from(taskList.finishedTasks));
 });
 taskList.tasks[1].done = true; // does not trigger autorun
 ```
