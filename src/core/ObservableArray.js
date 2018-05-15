@@ -1,12 +1,10 @@
 import ObservableInterface from './ObservableInterface';
 import ObservablePrimitive from './ObservablePrimitive';
-import ObservableObject from './ObservableObject';
 
 class ObservableArray extends ObservableInterface {
-  constructor(plainArray, { name = '', recursive } = {}) {
+  constructor(plainArray, { name = '' } = {}) {
     super('[array] ' + name, false);
     this._name = name;
-    this._recursive = recursive;
     this._initializeArray(plainArray);
   }
 
@@ -62,18 +60,8 @@ class ObservableArray extends ObservableInterface {
       this.array.length = plainArray.length;
       for (let i = 0; i < plainArray.length; i++) {
         const value = plainArray[i];
-        let observableProp;
-        if (this._recursive) {
-          if (Array.isArray(value)) {
-            observableProp = new ObservableArray(value, { recursive: true });
-          } else if (typeof value === 'object') {
-            observableProp = new ObservableObject(value, { recursive: true });
-          } else {
-            observableProp = new ObservablePrimitive(value);
-          }
-        } else {
-          observableProp = new ObservablePrimitive(value);
-        }
+        const fullyQualifiedName = this._name + '#' + i + '#' + Math.random().toString().substr(2, 4);
+        const observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
         Object.defineProperty(this.array, i, {
           enumerable: true,
           configurable: true,

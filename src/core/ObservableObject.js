@@ -3,10 +3,9 @@ import ObservablePrimitive from './ObservablePrimitive';
 import ObservableArray from './ObservableArray';
 
 class ObservableObject extends ObservableInterface {
-  constructor(object, { name = '', recursive } = {}) {
+  constructor(object, { name = '' } = {}) {
     super('[object] ' + name, false);
     this._name = name;
-    this._recursive = recursive;
     this._initializeObject(object);
   }
 
@@ -27,18 +26,7 @@ class ObservableObject extends ObservableInterface {
       const key = keys[i];
       const value = plainObject[key];
       const fullyQualifiedName = this._name + '#' + key + '#' + Math.random().toString().substr(2, 4);
-      let observableProp;
-      if (this._recursive) {
-        if (Array.isArray(value)) {
-          observableProp = new ObservableArray(value, { name: fullyQualifiedName, recursive: true });
-        } else if (typeof value === 'object') {
-          observableProp = new ObservableObject(value, { name: fullyQualifiedName, recursive: true });
-        } else {
-          observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
-        }
-      } else {
-        observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
-      }
+      const observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
       Object.defineProperty(object, key, {
         enumerable: true,
         configurable: true,
