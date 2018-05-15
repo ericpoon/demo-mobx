@@ -3,7 +3,7 @@ import ObservableProperty from './ObservableProperty';
 
 class ObservableObject extends ObservableInterface {
   constructor(object, name) {
-    super(name);
+    super('[object] ' + name, false);
     this._initializeObject(object);
   }
 

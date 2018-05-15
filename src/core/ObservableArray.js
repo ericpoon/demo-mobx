@@ -2,7 +2,7 @@ import ObservableInterface from './ObservableInterface';
 
 class ObservableArray extends ObservableInterface {
   constructor(plainArray, name) {
-    super(name);
+    super('[array] ' + name, false);
     this._initializeArray(plainArray);
   }
 

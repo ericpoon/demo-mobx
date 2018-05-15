@@ -2,7 +2,7 @@ import ObservableInterface from './ObservableInterface';
 
 class ObservableProperty extends ObservableInterface {
   constructor(value, name) {
-    super(name);
+    super('[primitive] ' + name, false);
     this.value = value;
   }
 
