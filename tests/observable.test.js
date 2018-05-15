@@ -52,6 +52,38 @@ describe('@observable is initialized correctly', () => {
       expect(Array.from(tester.array)).toEqual(plainArray);
     });
   });
+
+  describe('@observable works for object', () => {
+    const employee = {
+      id: 12345678,
+      name: 'John',
+      isManager: true,
+    };
+
+    it('works when observable is initialized via constructor', () => {
+      class ObjectTester {
+        constructor(o) {
+          this.employee = o;
+        }
+
+        @observable employee;
+      }
+
+      const tester = new ObjectTester(employee);
+
+      expect(tester.employee).toEqual(employee);
+    });
+
+    it('works when observable is initialized via assignment', () => {
+      class ObjectTester {
+        @observable employee = employee;
+      }
+
+      const tester = new ObjectTester();
+
+      expect(tester.employee).toEqual(employee);
+    });
+  });
 });
 
 describe('@observable decorates class property in an instance-specific manner', () => {
@@ -87,10 +119,34 @@ describe('@observable decorates class property in an instance-specific manner', 
     expect(Array.from(tester1.array)).toEqual(plainArray1);
     expect(Array.from(tester2.array)).toEqual(plainArray2);
   });
+
+  it('works for object', () => {
+    class ObjectTester {
+      constructor(a) {
+        this.foo = a;
+      }
+
+      @observable
+      foo;
+    }
+
+    const obj1 = { a: 1, b: 2 };
+    const obj2 = { c: 3, d: 4 };
+    const tester1 = new ObjectTester(obj1);
+    const tester2 = new ObjectTester(obj2);
+
+    expect(tester1.foo).toEqual(obj1);
+    expect(tester2.foo).toEqual(obj2);
+  });
 });
 
 describe('@observable remains as an observable property after operations', () => {
-  it('is still observable after reassignment');
+  it('is still observable after reassignment - primitive values');
+  it('is still observable after reassignment - array');
+  it('is still observable after reassignment - object itself');
+  it('is still observable after reassignment - object properties');
+  it('is still observable after array pushing');
+  it('is still observable after array popping');
   it('is still observable after array mapping');
   it('is still observable after array filtering');
 });

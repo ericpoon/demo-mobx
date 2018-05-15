@@ -24,6 +24,33 @@ describe('getter and setter work correctly', () => {
   it('sets to a new array and remains as an observable');
 });
 
+describe('ObservableArray has one level deep of observable by default', () => {
+  it('has observable element - primitive values', () => {
+    const observableArr = new ObservableArray([1, 2, 3, 'str', true]).get();
+    for (const index in observableArr) {
+      const descriptor = Object.getOwnPropertyDescriptor(observableArr, index);
+      expect(descriptor.get.toString()).toMatch(/observableProp.get\(\)/);
+      expect(descriptor.set.toString()).toMatch(/observableProp.set\(.*\)/);
+    }
+  });
+  it('has observable element - array', () => {
+    const observableArr = new ObservableArray([[1], [2, 3], ['hello', 'str']]).get();
+    for (const index in observableArr) {
+      const descriptor = Object.getOwnPropertyDescriptor(observableArr, index);
+      expect(descriptor.get.toString()).toMatch(/observableProp.get\(\)/);
+      expect(descriptor.set.toString()).toMatch(/observableProp.set\(.*\)/);
+    }
+  });
+  it('has observable element - object', () => {
+    const observableArr = new ObservableArray([{}, {foo: 'hello', bar: 'world'}]).get();
+    for (const index in observableArr) {
+      const descriptor = Object.getOwnPropertyDescriptor(observableArr, index);
+      expect(descriptor.get.toString()).toMatch(/observableProp.get\(\)/);
+      expect(descriptor.set.toString()).toMatch(/observableProp.set\(.*\)/);
+    }
+  });
+});
+
 describe('ObservableArray supports array-like operations', () => {
   let simpleArr;
   let taskList;

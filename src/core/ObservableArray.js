@@ -1,8 +1,10 @@
 import ObservableInterface from './ObservableInterface';
+import ObservablePrimitive from './ObservablePrimitive';
 
 class ObservableArray extends ObservableInterface {
-  constructor(plainArray, name) {
-    super(name);
+  constructor(plainArray, { name = '' } = {}) {
+    super('[array] ' + name, false);
+    this._name = name;
     this._initializeArray(plainArray);
   }
 
@@ -33,15 +35,17 @@ class ObservableArray extends ObservableInterface {
 
   filter = (fn) => {
     const plainArr = Array.from(this.array);
-    return new ObservableArray(plainArr.filter(fn)).array;
+    const name = `filtered#${Math.random().toString().substr(2, 4)}`;
+    return new ObservableArray(plainArr.filter(fn), { name }).array;
   };
 
   map = (fn) => {
     const plainArr = Array.from(this.array);
-    return new ObservableArray(plainArr.map(fn)).array;
+    const name = `mapped#${Math.random().toString().substr(2, 4)}`;
+    return new ObservableArray(plainArr.map(fn), { name }).array;
   };
 
-  _initializeArray(plainArray) {
+  _initializeArray(plainArray = []) {
     this.array = {
       length: 0,
       push: this.push,
@@ -57,7 +61,19 @@ class ObservableArray extends ObservableInterface {
     if (plainArray && plainArray.length) {
       this.array.length = plainArray.length;
       for (let i = 0; i < plainArray.length; i++) {
-        this.array[i] = plainArray[i];
+        const value = plainArray[i];
+        const fullyQualifiedName = this._name + '#' + i + '#' + Math.random().toString().substr(2, 4);
+        const observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
+        Object.defineProperty(this.array, i, {
+          enumerable: true,
+          configurable: true,
+          get() {
+            return observableProp.get();
+          },
+          set(newValue) {
+            observableProp.set(newValue);
+          },
+        });
       }
     }
   }

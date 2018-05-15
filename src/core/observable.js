@@ -1,5 +1,6 @@
-import ObservableProperty from './ObservableProperty';
+import ObservablePrimitive from './ObservablePrimitive';
 import ObservableArray from './ObservableArray';
+import ObservableObject from './ObservableObject';
 
 export default function observable(target, name, descriptor) {
   function getInstanceSpecificPropDescriptor(target, name, classPropDescriptor, value) {
@@ -11,9 +12,11 @@ export default function observable(target, name, descriptor) {
     }
     let observableProp;
     if (Array.isArray(value)) {
-      observableProp = new ObservableArray(value, fullyQualifiedName);
+      observableProp = new ObservableArray(value, { name: fullyQualifiedName });
+    } else if (typeof value === 'object') {
+      observableProp = new ObservableObject(value, { name: fullyQualifiedName });
     } else {
-      observableProp = new ObservableProperty(value);
+      observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
     }
     return {
       enumerable,
