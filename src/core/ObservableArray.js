@@ -1,11 +1,11 @@
 import ObservableInterface from './ObservableInterface';
-import ObservablePrimitive from './ObservablePrimitive';
+import { getObservableWithCorrectType } from '../utils/observableTypeHelper';
 
 class ObservableArray extends ObservableInterface {
-  constructor(plainArray, { name = '' } = {}) {
+  constructor(array, { name = '' } = {}) {
     super('[array] ' + name, false);
     this._name = name;
-    this._initializeArray(plainArray);
+    this._initializeArray(array);
   }
 
   get = () => {
@@ -13,13 +13,23 @@ class ObservableArray extends ObservableInterface {
     return this.array;
   };
 
-  set = (plainArray) => {
-    this._initializeArray(plainArray);
+  set = (array) => {
+    this._initializeArray(array);
     this._triggerAutorun();
   };
 
   push = (item) => {
-    this.array[this.array.length] = item;
+    const observableProp = getObservableWithCorrectType(item);
+    Object.defineProperty(this.array, this.array.length, {
+      enumerable: true,
+      configurable: true,
+      get() {
+        return observableProp.get();
+      },
+      set(newValue) {
+        observableProp.set(newValue);
+      },
+    });
     this.array.length += 1;
     this._triggerAutorun();
     return this.array.length;
@@ -63,7 +73,7 @@ class ObservableArray extends ObservableInterface {
       for (let i = 0; i < plainArray.length; i++) {
         const value = plainArray[i];
         const fullyQualifiedName = this._name + '#' + i + '#' + Math.random().toString().substr(2, 4);
-        const observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
+        const observableProp = getObservableWithCorrectType(value, fullyQualifiedName);
         Object.defineProperty(this.array, i, {
           enumerable: true,
           configurable: true,

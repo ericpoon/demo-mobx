@@ -33,34 +33,7 @@ describe('ObservableObject constructs correctly', () => {
   });
 });
 
-describe('ObservableObject has one level deep of observable by default', () => {
-  it('has observable properties for object of primitive values', () => {
-    const observableObj = new ObservableObject(employee).get();
-    const keys = Object.keys(employee);
-    for (const key of keys) {
-      const descriptor = Object.getOwnPropertyDescriptor(observableObj, key);
-      expect(descriptor.get.toString()).toMatch(/observableProp.get\(\)/);
-      expect(descriptor.set.toString()).toMatch(/observableProp.set\(.*\)/);
-    }
-  });
-  it('has observable properties for object of arrays', () => {
-    const observableObj = new ObservableObject(course).get();
-    const keys = Object.keys(course);
-    for (const key of keys) {
-      const descriptor = Object.getOwnPropertyDescriptor(observableObj, key);
-      expect(descriptor.get.toString()).toMatch(/observableProp.get\(\)/);
-      expect(descriptor.set.toString()).toMatch(/observableProp.set\(.*\)/);
-    }
-  });
-  it('has observable properties for object of objects', () => {
-    const observableObj = new ObservableObject(department).get();
-    const keys = Object.keys(department);
-    for (const key of keys) {
-      const descriptor = Object.getOwnPropertyDescriptor(observableObj, key);
-      expect(descriptor.get.toString()).toMatch(/observableProp.get\(\)/);
-      expect(descriptor.set.toString()).toMatch(/observableProp.set\(.*\)/);
-    }
-  });
+describe('ObservableObject recursively makes all properties observable', () => {
 });
 
 describe('getter and setter work correctly', () => {

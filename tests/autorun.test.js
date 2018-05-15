@@ -114,10 +114,30 @@ describe('autorun gets triggered properly', () => {
       return Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][0]);
     }
 
-    it('triggered when re-assign', () => {
+    it('triggered when re-assign the array itself', () => {
       autorun(() => mockFn(taskList.tasks));
       expect(mockFn).toHaveBeenCalledTimes(1);
       taskList.tasks = [];
+      expect(mockFn).toHaveBeenCalledTimes(2);
+    });
+
+    it('triggered when re-assign an item in the array', () => {
+      taskList.tasks.push(ITEM_1);
+      taskList.tasks.push(ITEM_2);
+
+      autorun(() => mockFn(taskList.tasks.map(i => i)));
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      taskList.tasks[0] = { title: 'go swimming' };
+      expect(mockFn).toHaveBeenCalledTimes(2);
+    });
+
+    it('triggered when mutate an item in the array', () => {
+      taskList.tasks.push(ITEM_1);
+      taskList.tasks.push(ITEM_2);
+
+      autorun(() => mockFn(taskList.tasks.map(i => i)));
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      taskList.tasks[0].title = 'go swimming';
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
@@ -152,6 +172,12 @@ describe('autorun gets triggered properly', () => {
       id: 12345678,
       name: 'John',
       isManager: true,
+      projects: ['projA', 'projB', 'projC'],
+      details: {
+        yearOfBirth: 1990,
+        city: 'Hong Kong',
+        github: 'www.github.com/demo',
+      },
     };
 
     class Tester {
@@ -180,7 +206,32 @@ describe('autorun gets triggered properly', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       tester.employee.name = 'Mary';
       expect(mockFn).toHaveBeenCalledTimes(2);
-      expect(mockFn).toHaveBeenLastCalledWith(...Object.values({ ...employee, name: 'Mary' }));
+      expect(mockFn).toHaveBeenLastCalledWith(...Object.values({
+        ...employee,
+        name: 'Mary',
+        projects: expect.anything(),
+      }));
+      expect(Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][3])).toEqual(employee.projects);
+    });
+
+    it('triggered if mutate an array property in the object', () => {
+      autorun(() => mockFn(...Object.values(tester.employee)));
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      tester.employee.projects.push('projD');
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(...Object.values({
+        ...employee,
+        projects: expect.anything(),
+      }));
+      expect(Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][3])).toEqual([...employee.projects, 'projD']);
+    });
+
+    it('triggered if mutate an object property in the object', () => {
+      autorun(() => mockFn(tester.employee.details.city));
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      tester.employee.details.city = 'London';
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith('London');
     });
   });
 });
