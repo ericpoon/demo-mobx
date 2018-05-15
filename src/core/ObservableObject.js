@@ -1,6 +1,5 @@
 import ObservableInterface from './ObservableInterface';
-import ObservablePrimitive from './ObservablePrimitive';
-import ObservableArray from './ObservableArray';
+import { getObservableWithCorrectType } from '../utils/observableTypeHelper';
 
 class ObservableObject extends ObservableInterface {
   constructor(object, { name = '' } = {}) {
@@ -26,7 +25,7 @@ class ObservableObject extends ObservableInterface {
       const key = keys[i];
       const value = plainObject[key];
       const fullyQualifiedName = this._name + '#' + key + '#' + Math.random().toString().substr(2, 4);
-      const observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
+      const observableProp = getObservableWithCorrectType(value, fullyQualifiedName);
       Object.defineProperty(object, key, {
         enumerable: true,
         configurable: true,

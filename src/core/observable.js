@@ -1,6 +1,4 @@
-import ObservablePrimitive from './ObservablePrimitive';
-import ObservableArray from './ObservableArray';
-import ObservableObject from './ObservableObject';
+import { getObservableWithCorrectType } from '../utils/observableTypeHelper';
 
 export default function observable(target, name, descriptor) {
   function getInstanceSpecificPropDescriptor(target, name, classPropDescriptor, value) {
@@ -10,14 +8,7 @@ export default function observable(target, name, descriptor) {
       // this is called lazily in current implementation
       value = initializer();
     }
-    let observableProp;
-    if (Array.isArray(value)) {
-      observableProp = new ObservableArray(value, { name: fullyQualifiedName });
-    } else if (typeof value === 'object') {
-      observableProp = new ObservableObject(value, { name: fullyQualifiedName });
-    } else {
-      observableProp = new ObservablePrimitive(value, { name: fullyQualifiedName });
-    }
+    const observableProp = getObservableWithCorrectType(value, fullyQualifiedName);
     return {
       enumerable,
       configurable,
