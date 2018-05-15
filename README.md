@@ -25,7 +25,7 @@ Or in other words, here's the flow:
 
 ---
 
-As of commit [`289ce13`](https://github.com/ericpoon/demo-mobx/commit/289ce13), `@observable` and `autorun()` should work well enough to support **primitive
+As of commit [`c5676be`](https://github.com/ericpoon/demo-mobx/commit/c5676be), `@observable` and `autorun()` should work well enough to support **primitive
 values, arrays and objects**. Also `@observable` automatically converts array items or object properties into observable properties in a recursive manner. 
 This behaviour is the same as what official MobX library does.
 
