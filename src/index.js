@@ -9,7 +9,7 @@ taskList.tasks.push({ title: 'take medicine' });
 taskList.tasks.push({ title: 'go to supermarket' });
 
 autorun(() => {
-  // todo: it does not support one level deep observation at the moment
+  // todo: it does not support observing computed value
   console.log('[autorun] finished tasks =', taskList.finishedTasks.map(i => i.title));
 });
 
