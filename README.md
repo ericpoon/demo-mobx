@@ -26,9 +26,8 @@ Or in other words, here's the flow:
 ---
 
 As of commit [`a062aa2`](https://github.com/ericpoon/demo-mobx/commit/a062aa2), `@observable` and `autorun()` should work well enough to support **primitive
-values, arrays and objects**. Also `@observable` automatically converts array items or object properties
-
-into observable properties in a recursive manner. This behaviour is the same as what official MobX library does.
+values, arrays and objects**. Also `@observable` automatically converts array items or object properties into observable properties in a recursive manner. 
+This behaviour is the same as what official MobX library does.
 
 However, at this point, we have not implemented `@computed` yet, so the following code fails:
 ```javascript
