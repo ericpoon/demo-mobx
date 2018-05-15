@@ -4,10 +4,6 @@ class ObservablePrimitive extends ObservableInterface {
   constructor(value, { name = '' } = {}) {
     super('[primitive] ' + name, false);
     this.value = value;
-    Object.defineProperty(this, 'autoruns', { enumerable: false });
-    Object.defineProperty(this, 'value', { enumerable: false });
-    Object.defineProperty(this, 'get', { enumerable: false });
-    Object.defineProperty(this, 'set', { enumerable: false });
   }
 
   get = () => {
