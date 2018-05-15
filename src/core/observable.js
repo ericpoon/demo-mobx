@@ -1,4 +1,4 @@
-import ObservableProperty from './ObservableProperty';
+import ObservablePrimitive from './ObservablePrimitive';
 import ObservableArray from './ObservableArray';
 import ObservableObject from './ObservableObject';
 
@@ -16,7 +16,7 @@ export default function observable(target, name, descriptor) {
     } else if (typeof value === 'object') {
       observableProp = new ObservableObject(value, fullyQualifiedName);
     } else {
-      observableProp = new ObservableProperty(value, fullyQualifiedName);
+      observableProp = new ObservablePrimitive(value, fullyQualifiedName);
     }
     return {
       enumerable,

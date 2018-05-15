@@ -1,6 +1,6 @@
 import ObservableInterface from './ObservableInterface';
 
-class ObservableProperty extends ObservableInterface {
+class ObservablePrimitive extends ObservableInterface {
   constructor(value, name) {
     super('[primitive] ' + name, false);
     this.value = value;
@@ -17,4 +17,4 @@ class ObservableProperty extends ObservableInterface {
   };
 }
 
-export default ObservableProperty;
+export default ObservablePrimitive;

@@ -1,5 +1,5 @@
 import ObservableInterface from './ObservableInterface';
-import ObservableProperty from './ObservableProperty';
+import ObservablePrimitive from './ObservablePrimitive';
 
 class ObservableObject extends ObservableInterface {
   constructor(object, name) {
@@ -23,7 +23,7 @@ class ObservableObject extends ObservableInterface {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const value = plainObject[key];
-      const observableProp = new ObservableProperty(value);
+      const observableProp = new ObservablePrimitive(value);
       // todo: support array and nested object
       Object.defineProperty(object, key, {
         enumerable: true,
