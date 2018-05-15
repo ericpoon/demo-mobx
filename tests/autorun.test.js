@@ -42,7 +42,38 @@ describe('autorun subscribes and unsubscribes correctly', () => {
     expect(mockFn).toHaveBeenCalledTimes(6);
 
   });
-  it('only subscribes for properties it accesses at run time - triggered by mutation', () => {
+  it('only subscribes for properties it accesses at run time - triggered by internal mutation', () => {
+    class Tester {
+      @observable array = [1, 2, 3, 4];
+
+      @observable sum;
+
+      get arraySum() {
+        return Array.from(this.array).reduce((a, b) => a + b, 0);
+      }
+    }
+
+    const tester = new Tester();
+    autorun(() => {
+      if (tester.sum) {
+        mockFn(tester.sum);
+      } else {
+        mockFn(tester.arraySum);
+      }
+    });
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenLastCalledWith(1 + 2 + 3 + 4);
+
+    tester.array.push(5);
+    expect(mockFn).toHaveBeenCalledTimes(2);
+    expect(mockFn).toHaveBeenLastCalledWith(1 + 2 + 3 + 4 + 5); // triggered by push
+
+    tester.sum = 100;
+    expect(mockFn).toHaveBeenCalledTimes(3);
+    expect(mockFn).toHaveBeenLastCalledWith(100);
+
+    tester.array.push(6);
+    expect(mockFn).toHaveBeenCalledTimes(3); // not triggered
 
   });
 });
