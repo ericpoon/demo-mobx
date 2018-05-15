@@ -12,11 +12,11 @@ export default function observable(target, name, descriptor) {
     }
     let observableProp;
     if (Array.isArray(value)) {
-      observableProp = new ObservableArray(value, fullyQualifiedName);
+      observableProp = new ObservableArray(value, {name: fullyQualifiedName});
     } else if (typeof value === 'object') {
-      observableProp = new ObservableObject(value, fullyQualifiedName);
+      observableProp = new ObservableObject(value, {name: fullyQualifiedName});
     } else {
-      observableProp = new ObservablePrimitive(value, fullyQualifiedName);
+      observableProp = new ObservablePrimitive(value, {name: fullyQualifiedName});
     }
     return {
       enumerable,
