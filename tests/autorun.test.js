@@ -2,6 +2,7 @@ import Invoice from '../tests/fixture/Invoice';
 import Person from '../tests/fixture/Person';
 import TaskList from '../tests/fixture/TaskList';
 import { autorun } from '../src/core';
+import observable from '../src/core/observable';
 
 describe('autorun subscribes and unsubscribes correctly', () => {
   let mockFn;
@@ -147,6 +148,39 @@ describe('autorun gets triggered properly', () => {
     });
   });
   describe('autorun works for object', () => {
+    const employee = {
+      id: 12345678,
+      name: 'John',
+      isManager: true,
+    };
 
+    class Tester {
+      @observable
+      employee = employee;
+    }
+
+    let tester;
+    let mockFn;
+    beforeEach(() => {
+      tester = new Tester();
+      mockFn = jest.fn();
+    });
+
+    it('triggered if re-assign the object', () => {
+      autorun(() => mockFn(tester.employee));
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      const newEmployee = { id: 98760000, name: 'Mary', isManager: false };
+      tester.employee = newEmployee;
+      expect(mockFn).toHaveBeenLastCalledWith(newEmployee);
+      expect(mockFn).toHaveBeenCalledTimes(2);
+    });
+
+    it('triggered if re-assign a property in the object', () => {
+      autorun(() => mockFn(...Object.values(tester.employee)));
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      tester.employee.name = 'Mary';
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      expect(mockFn).toHaveBeenLastCalledWith(...Object.values({ ...employee, name: 'Mary' }));
+    });
   });
 });
