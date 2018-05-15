@@ -35,12 +35,14 @@ class ObservableArray extends ObservableInterface {
 
   filter = (fn) => {
     const plainArr = Array.from(this.array);
-    return new ObservableArray(plainArr.filter(fn)).array;
+    const name = `filtered#${Math.random().toString().substr(2, 4)}`;
+    return new ObservableArray(plainArr.filter(fn), { name }).array;
   };
 
   map = (fn) => {
     const plainArr = Array.from(this.array);
-    return new ObservableArray(plainArr.map(fn)).array;
+    const name = `mapped#${Math.random().toString().substr(2, 4)}`;
+    return new ObservableArray(plainArr.map(fn), { name }).array;
   };
 
   _initializeArray(plainArray = []) {
