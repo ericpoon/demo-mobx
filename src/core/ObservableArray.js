@@ -1,8 +1,12 @@
 import ObservableInterface from './ObservableInterface';
+import ObservablePrimitive from './ObservablePrimitive';
+import ObservableObject from './ObservableObject';
 
 class ObservableArray extends ObservableInterface {
-  constructor(plainArray, name) {
+  constructor(plainArray, { name = '', recursive } = {}) {
     super('[array] ' + name, false);
+    this._name = name;
+    this._recursive = recursive;
     this._initializeArray(plainArray);
   }
 
@@ -57,7 +61,29 @@ class ObservableArray extends ObservableInterface {
     if (plainArray && plainArray.length) {
       this.array.length = plainArray.length;
       for (let i = 0; i < plainArray.length; i++) {
-        this.array[i] = plainArray[i];
+        const value = plainArray[i];
+        let observableProp;
+        if (this._recursive) {
+          if (Array.isArray(value)) {
+            observableProp = new ObservableArray(value, { recursive: true });
+          } else if (typeof value === 'object') {
+            observableProp = new ObservableObject(value, { recursive: true });
+          } else {
+            observableProp = new ObservablePrimitive(value);
+          }
+        } else {
+          observableProp = new ObservablePrimitive(value);
+        }
+        Object.defineProperty(this.array, i, {
+          enumerable: true,
+          configurable: true,
+          get() {
+            return observableProp.get();
+          },
+          set(newValue) {
+            observableProp.set(newValue);
+          },
+        });
       }
     }
   }
