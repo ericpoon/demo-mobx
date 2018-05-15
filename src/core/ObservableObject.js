@@ -17,7 +17,7 @@ class ObservableObject extends ObservableInterface {
     this._triggerAutorun();
   };
 
-  _initializeObject(plainObject) {
+  _initializeObject(plainObject = {}) {
     const keys = Object.keys(plainObject);
     const object = {};
     for (let i = 0; i < keys.length; i++) {

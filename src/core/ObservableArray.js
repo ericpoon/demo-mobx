@@ -41,7 +41,7 @@ class ObservableArray extends ObservableInterface {
     return new ObservableArray(plainArr.map(fn)).array;
   };
 
-  _initializeArray(plainArray) {
+  _initializeArray(plainArray = []) {
     this.array = {
       length: 0,
       push: this.push,
