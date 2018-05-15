@@ -141,7 +141,12 @@ describe('@observable decorates class property in an instance-specific manner', 
 });
 
 describe('@observable remains as an observable property after operations', () => {
-  it('is still observable after reassignment');
+  it('is still observable after reassignment - primitive values');
+  it('is still observable after reassignment - array');
+  it('is still observable after reassignment - object itself');
+  it('is still observable after reassignment - object properties');
+  it('is still observable after array pushing');
+  it('is still observable after array popping');
   it('is still observable after array mapping');
   it('is still observable after array filtering');
 });
