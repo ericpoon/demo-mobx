@@ -1,5 +1,4 @@
-import { observable } from '../src/core';
-import autorun from '../src/core/autorun';
+import { observable, autorun } from '../src/core';
 import { getArgsInLastCall } from './helpers/mockFunctionHelper';
 
 describe('@observable is initialized correctly', () => {

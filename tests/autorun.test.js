@@ -2,8 +2,7 @@ import Invoice from '../tests/fixture/Invoice';
 import Person from '../tests/fixture/Person';
 import TaskList from '../tests/fixture/TaskList';
 import { getArgsInLastCall } from './helpers/mockFunctionHelper';
-import { autorun } from '../src/core';
-import observable from '../src/core/observable';
+import { observable, autorun } from '../src/core';
 
 describe('autorun subscribes and unsubscribes correctly', () => {
   let mockFn;
