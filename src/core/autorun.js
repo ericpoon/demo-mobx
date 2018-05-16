@@ -1,5 +1,7 @@
 import AutorunFunction from './AutorunFunction';
 
 export default function autorun(fn) {
-  new AutorunFunction(fn).run();
+  const autorunFn = new AutorunFunction(fn);
+  autorunFn.run();
+  return autorunFn.getDisposer();
 }
