@@ -13,4 +13,8 @@ module.exports = {
       exclude: /node_modules/,
     }],
   },
+  devServer: {
+    contentBase: path.join(__dirname, 'public'),
+    compress: true,
+  },
 };
