@@ -13,9 +13,8 @@ class ObservableArray extends ObservableInterface {
     return this.array;
   };
 
-  set = (array) => {
-    // todo: use getObservableWithCorrectType
-    this._initializeArray(array);
+  set = (newArray) => {
+    this.array = getObservableWithCorrectType(newArray, this._name).get();
     this._triggerAutorun();
   };
 

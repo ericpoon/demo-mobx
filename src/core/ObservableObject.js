@@ -14,8 +14,7 @@ class ObservableObject extends ObservableInterface {
   };
 
   set = (newObject) => {
-    // todo: use getObservableWithCorrectType
-    this._initializeObject(newObject);
+    this.object = getObservableWithCorrectType(newObject, this._name).get();
     this._triggerAutorun();
   };
 

@@ -3,7 +3,9 @@ import ObservableArray from '../core/ObservableArray';
 import ObservableObject from '../core/ObservableObject';
 
 export function getObservableWithCorrectType(value, name = '') {
-  if (Array.isArray(value)) {
+  if (value === null) {
+    return new ObservablePrimitive(value, { name });
+  } else if (Array.isArray(value)) {
     return new ObservableArray(value, { name });
   } else if (typeof value === 'object') {
     return new ObservableObject(value, { name });
