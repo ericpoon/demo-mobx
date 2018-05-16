@@ -206,28 +206,72 @@ describe('@observable remains as an observable property after reassignment / ope
     tester.primitive = 2;
     expect(mockFn).toHaveBeenLastCalledWith(2);
 
+    tester.primitive = [100, 101];
+    expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([100, 101]);
+
+    tester.primitive = { hello: 123 };
+    expect(mockFn).toHaveBeenLastCalledWith({ hello: 123 });
+
     tester.primitive = undefined;
     expect(mockFn).toHaveBeenLastCalledWith(undefined);
 
     tester.primitive = null;
     expect(getArgsInLastCall(mockFn)[0]).toEqual(null);
 
-    tester.primitive = [100, 101];
-    expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([100, 101]);
-
     tester.primitive = tester.array;
     expect(mockFn).toHaveBeenLastCalledWith(tester.array);
 
-    expect(mockFn).toHaveBeenCalledTimes(6);
+    expect(mockFn).toHaveBeenCalledTimes(7);
   });
 
   it('is still observable after reassignment - array', () => {
+    autorun(() => mockFn(tester.array));
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    tester.array = 2;
+    expect(mockFn).toHaveBeenLastCalledWith(2);
+
+    tester.array = [100, 101];
+    expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([100, 101]);
+
+    tester.array = { hello: 123 };
+    expect(mockFn).toHaveBeenLastCalledWith({ hello: 123 });
+
+    tester.array = undefined;
+    expect(mockFn).toHaveBeenLastCalledWith(undefined);
+
+    tester.array = null;
+    expect(getArgsInLastCall(mockFn)[0]).toEqual(null);
+
+    tester.array = tester.primitive;
+    expect(mockFn).toHaveBeenLastCalledWith(tester.primitive);
+
+    expect(mockFn).toHaveBeenCalledTimes(7);
   });
 
   it('is still observable after reassignment - object itself', () => {
-  });
+    autorun(() => mockFn(tester.object));
+    expect(mockFn).toHaveBeenCalledTimes(1);
 
-  it('is still observable after array operations (internal mutation)', () => {
+    tester.object = 2;
+    expect(mockFn).toHaveBeenLastCalledWith(2);
+
+    tester.object = [100, 101];
+    expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([100, 101]);
+
+    tester.object = { hello: 123 };
+    expect(mockFn).toHaveBeenLastCalledWith({ hello: 123 });
+
+    tester.object = undefined;
+    expect(mockFn).toHaveBeenLastCalledWith(undefined);
+
+    tester.object = null;
+    expect(getArgsInLastCall(mockFn)[0]).toEqual(null);
+
+    tester.object = tester.primitive;
+    expect(mockFn).toHaveBeenLastCalledWith(tester.primitive);
+
+    expect(mockFn).toHaveBeenCalledTimes(7);
   });
 });
 

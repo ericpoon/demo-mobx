@@ -149,7 +149,27 @@ describe('autorun gets triggered properly', () => {
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
-    it('triggered when re-assign an item in the array', () => {
+    it('triggered when re-assign an item in the array - case 1', () => {
+      class Tester {
+        @observable array = [1, 2, 3, 4];
+      }
+
+      const tester = new Tester();
+      autorun(() => mockFn(tester.array));
+      expect(mockFn).toHaveBeenCalledTimes(1);
+
+      tester.array.push(100);
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([1, 2, 3, 4, 100]);
+
+      tester.array.pop();
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([1, 2, 3, 4]);
+      expect(mockFn).toHaveBeenCalledTimes(3);
+
+      tester.array[0] = 99; // does not trigger intensively, as array[0] is not accessed in autorun function
+      expect(mockFn).toHaveBeenCalledTimes(3);
+    });
+
+    it('triggered when re-assign an item in the array - case 2', () => {
       taskList.tasks.push(ITEM_1);
       taskList.tasks.push(ITEM_2);
 
