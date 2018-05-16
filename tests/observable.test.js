@@ -206,10 +206,10 @@ describe('@observable remains as an observable property after reassignment / ope
     tester.primitive = 2;
     expect(mockFn).toHaveBeenLastCalledWith(2);
 
-    tester.primitive = undefined;
+    tester.primitive = undefined; // fixme: unsure what to expect
     expect(mockFn).toHaveBeenLastCalledWith(undefined);
 
-    tester.primitive = null;
+    tester.primitive = null; // fixme: unsure what to expect
     expect(getArgsInLastCall(mockFn)[0]).toEqual({});
 
     tester.primitive = [100, 101];

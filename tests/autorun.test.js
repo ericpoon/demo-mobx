@@ -241,7 +241,7 @@ describe('autorun gets triggered properly', () => {
         name: 'Mary',
         projects: expect.anything(),
       }));
-      expect(Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][3])).toEqual(employee.projects);
+      expect(Array.from(getArgsInLastCall(mockFn)[3])).toEqual(employee.projects);
     });
 
     it('triggered if mutate an array property in the object', () => {
@@ -253,7 +253,7 @@ describe('autorun gets triggered properly', () => {
         ...employee,
         projects: expect.anything(),
       }));
-      expect(Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][3])).toEqual([...employee.projects, 'projD']);
+      expect(Array.from(getArgsInLastCall(mockFn)[3])).toEqual([...employee.projects, 'projD']);
     });
 
     it('triggered if mutate an object property in the object', () => {
