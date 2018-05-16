@@ -13,8 +13,8 @@ class ObservableArray extends ObservableInterface {
     return this.array;
   };
 
-  set = (array) => {
-    this._initializeArray(array);
+  set = (newArray) => {
+    this.array = getObservableWithCorrectType(newArray, this._name).get();
     this._triggerAutorun();
   };
 
@@ -46,12 +46,16 @@ class ObservableArray extends ObservableInterface {
   filter = (fn) => {
     const plainArr = Array.from(this.array);
     const name = `filtered#${Math.random().toString().substr(2, 4)}`;
+
+    /** We must create a new observable array object so the `this` is bound correctly to the new one;
+     * This doesn't lead to over-subscribing issue because we don't access the new array via getter*/
     return new ObservableArray(plainArr.filter(fn), { name }).array;
   };
 
   map = (fn) => {
     const plainArr = Array.from(this.array);
     const name = `mapped#${Math.random().toString().substr(2, 4)}`;
+
     return new ObservableArray(plainArr.map(fn), { name }).array;
   };
 

@@ -14,11 +14,19 @@ class ObservableObject extends ObservableInterface {
   };
 
   set = (newObject) => {
-    this._initializeObject(newObject);
+    this.object = getObservableWithCorrectType(newObject, this._name).get();
     this._triggerAutorun();
   };
 
   _initializeObject(plainObject = {}) {
+    /** null should never be passed into this function,
+     * but we keep this checking as a good practice of defensive programming
+     */
+    if (plainObject === null) {
+      this.object = getObservableWithCorrectType(null, this._name).get();
+      return;
+    }
+
     const keys = Object.keys(plainObject);
     const object = {};
     for (let i = 0; i < keys.length; i++) {

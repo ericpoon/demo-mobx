@@ -1,4 +1,6 @@
 import { observable } from '../src/core';
+import autorun from '../src/core/autorun';
+import { getArgsInLastCall } from './helpers/mockFunctionHelper';
 
 describe('@observable is initialized correctly', () => {
   describe('works for primitive values', () => {
@@ -84,6 +86,35 @@ describe('@observable is initialized correctly', () => {
       expect(tester.employee).toEqual(employee);
     });
   });
+
+  describe('works for null and undefined', () => {
+    it('works when observable is initialized via constructor', () => {
+      class Tester {
+        constructor(foo) {
+          this.foo = foo;
+        }
+
+        @observable foo;
+      }
+
+      const tester1 = new Tester(undefined);
+      expect(tester1.foo).toBe(undefined);
+
+      const tester2 = new Tester(null);
+      expect(tester2.foo).toEqual(null);
+    });
+
+    it('works when observable is initialized via assignment', () => {
+      class Tester {
+        @observable foo = undefined;
+        @observable bar = null;
+      }
+
+      const tester = new Tester();
+      expect(tester.foo).toBe(undefined);
+      expect(tester.bar).toEqual(null);
+    });
+  });
 });
 
 describe('@observable decorates class property in an instance-specific manner', () => {
@@ -140,13 +171,131 @@ describe('@observable decorates class property in an instance-specific manner', 
   });
 });
 
-describe('@observable remains as an observable property after operations', () => {
-  it('is still observable after reassignment - primitive values');
-  it('is still observable after reassignment - array');
-  it('is still observable after reassignment - object itself');
-  it('is still observable after reassignment - object properties');
-  it('is still observable after array pushing');
-  it('is still observable after array popping');
-  it('is still observable after array mapping');
-  it('is still observable after array filtering');
+describe('@observable remains as an observable property after reassignment / operations', () => {
+  /**
+   * There are three types of observable:
+   *   primitive
+   *   array
+   *   object
+   *
+   * Reassignment could be:
+   *   reassign with a new property of the same type
+   *   reassign with a new property of different type
+   *   reassign with null
+   *   reassign with undefined
+   *   reassign with another observable
+   * */
+
+  class Tester {
+    @observable primitive = 1;
+    @observable array = [1, 2, 3, 4];
+    @observable object = { 'a': 1, 'b': 2 };
+  }
+
+  let tester;
+  let mockFn;
+  beforeEach(() => {
+    tester = new Tester();
+    mockFn = jest.fn();
+  });
+
+  it('is still observable after reassignment - primitive values', () => {
+    autorun(() => mockFn(tester.primitive));
+    expect(mockFn).toHaveBeenCalledTimes(1);
+
+    tester.primitive = 2;
+    expect(mockFn).toHaveBeenLastCalledWith(2);
+
+    tester.primitive = undefined;
+    expect(mockFn).toHaveBeenLastCalledWith(undefined);
+
+    tester.primitive = null;
+    expect(getArgsInLastCall(mockFn)[0]).toEqual(null);
+
+    tester.primitive = [100, 101];
+    expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([100, 101]);
+
+    tester.primitive = tester.array;
+    expect(mockFn).toHaveBeenLastCalledWith(tester.array);
+
+    expect(mockFn).toHaveBeenCalledTimes(6);
+  });
+
+  it('is still observable after reassignment - array', () => {
+  });
+
+  it('is still observable after reassignment - object itself', () => {
+  });
+
+  it('is still observable after array operations (internal mutation)', () => {
+  });
+});
+
+describe('@observable creates non-observable with observable properties within', () => {
+  class Tester {
+    @observable array = [1, 2, 3, 4];
+  }
+
+  function getArgInLastCall(mockFn) {
+    return Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][0]);
+  }
+
+  let tester;
+  let mockFn;
+  beforeEach(() => {
+    tester = new Tester();
+    mockFn = jest.fn();
+  });
+
+  it('does not return an observable from array operations (mapping etc.)', () => {
+    let arrayMapped = tester.array.map(i => i * 3);
+    let arrayFiltered = tester.array.filter(i => i % 2 === 0);
+    let arrayMappedFiltered = tester.array.map(i => i * 3).filter(i => i % 2 === 0);
+    let arrayFilteredMapped = tester.array.filter(i => i % 2 === 0).map(i => i * 3);
+    autorun(() => mockFn(arrayMapped));
+    autorun(() => mockFn(arrayFiltered));
+    autorun(() => mockFn(arrayMappedFiltered));
+    autorun(() => mockFn(arrayFilteredMapped));
+    expect(mockFn).toHaveBeenCalledTimes(4);
+
+    // if a property is NOT an observable, then re-assigning it should NOT trigger autorun
+
+    arrayMapped = 'foo1';
+    arrayFiltered = 'foo2';
+    arrayMappedFiltered = 'foo3';
+    arrayFilteredMapped = 'foo4';
+
+    expect(mockFn).toHaveBeenCalledTimes(4);
+  });
+
+  it('contains observable items in the returned array from array operations (mapping etc.)', () => {
+    let arrayMapped = tester.array.map(i => i * 3);
+    let arrayFiltered = tester.array.filter(i => i % 2 === 0);
+    let arrayMappedFiltered = tester.array.map(i => i * 3).filter(i => i % 2 === 0);
+    let arrayFilteredMapped = tester.array.filter(i => i % 2 === 0).map(i => i * 3);
+    autorun(() => mockFn(Array.from(arrayMapped)));
+    autorun(() => mockFn(Array.from(arrayFiltered)));
+    autorun(() => mockFn(Array.from(arrayMappedFiltered)));
+    autorun(() => mockFn(Array.from(arrayFilteredMapped)));
+    expect(mockFn).toHaveBeenCalledTimes(4);
+
+    // if a property is an observable, then re-assigning it should trigger autorun
+
+    arrayMapped[0] = 'foo1';
+    expect(getArgInLastCall(mockFn)[0]).toBe('foo1');
+
+    arrayFiltered[0] = 'foo2';
+    expect(getArgInLastCall(mockFn)[0]).toBe('foo2');
+
+    arrayMappedFiltered[0] = 'foo3';
+    expect(getArgInLastCall(mockFn)[0]).toBe('foo3');
+
+    arrayFilteredMapped[0] = 'foo4';
+    expect(getArgInLastCall(mockFn)[0]).toBe('foo4');
+
+    expect(mockFn).toHaveBeenCalledTimes(8);
+  });
+});
+
+describe('@observable changes type accordingly after reassignment', () => {
 });

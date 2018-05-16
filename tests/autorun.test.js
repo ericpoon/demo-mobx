@@ -1,6 +1,7 @@
 import Invoice from '../tests/fixture/Invoice';
 import Person from '../tests/fixture/Person';
 import TaskList from '../tests/fixture/TaskList';
+import { getArgsInLastCall } from './helpers/mockFunctionHelper';
 import { autorun } from '../src/core';
 import observable from '../src/core/observable';
 
@@ -141,10 +142,6 @@ describe('autorun gets triggered properly', () => {
       mockFn = jest.fn();
     });
 
-    function getArgInLastCall(mockFn) {
-      return Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][0]);
-    }
-
     it('triggered when re-assign the array itself', () => {
       autorun(() => mockFn(taskList.tasks));
       expect(mockFn).toHaveBeenCalledTimes(1);
@@ -159,6 +156,7 @@ describe('autorun gets triggered properly', () => {
       autorun(() => mockFn(taskList.tasks.map(i => i)));
       expect(mockFn).toHaveBeenCalledTimes(1);
       taskList.tasks[0] = { title: 'go swimming' };
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([{ title: 'go swimming' }, ITEM_2]);
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
@@ -169,6 +167,7 @@ describe('autorun gets triggered properly', () => {
       autorun(() => mockFn(taskList.tasks.map(i => i)));
       expect(mockFn).toHaveBeenCalledTimes(1);
       taskList.tasks[0].title = 'go swimming';
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([{ title: 'go swimming' }, ITEM_2]);
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
@@ -176,7 +175,7 @@ describe('autorun gets triggered properly', () => {
       autorun(() => mockFn(taskList.tasks));
       taskList.tasks.push(ITEM_1);
 
-      expect(getArgInLastCall(mockFn)).toEqual([ITEM_1]);
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([ITEM_1]);
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
@@ -185,15 +184,15 @@ describe('autorun gets triggered properly', () => {
       taskList.tasks.push(ITEM_2);
 
       autorun(() => mockFn(taskList.tasks));
-      expect(getArgInLastCall(mockFn)).toEqual([ITEM_1, ITEM_2]);
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([ITEM_1, ITEM_2]);
 
       const popped1 = taskList.tasks.pop();
       expect(popped1).toEqual(ITEM_2);
-      expect(getArgInLastCall(mockFn)).toEqual([ITEM_1]);
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([ITEM_1]);
 
       const popped2 = taskList.tasks.pop();
       expect(popped2).toEqual(ITEM_1);
-      expect(getArgInLastCall(mockFn)).toEqual([]);
+      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([]);
 
       expect(mockFn).toHaveBeenCalledTimes(3);
     });
@@ -242,7 +241,7 @@ describe('autorun gets triggered properly', () => {
         name: 'Mary',
         projects: expect.anything(),
       }));
-      expect(Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][3])).toEqual(employee.projects);
+      expect(Array.from(getArgsInLastCall(mockFn)[3])).toEqual(employee.projects);
     });
 
     it('triggered if mutate an array property in the object', () => {
@@ -254,7 +253,7 @@ describe('autorun gets triggered properly', () => {
         ...employee,
         projects: expect.anything(),
       }));
-      expect(Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][3])).toEqual([...employee.projects, 'projD']);
+      expect(Array.from(getArgsInLastCall(mockFn)[3])).toEqual([...employee.projects, 'projD']);
     });
 
     it('triggered if mutate an object property in the object', () => {
