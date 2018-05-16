@@ -17,6 +17,16 @@ describe('ObservableArray constructs correctly', () => {
     const array = new ObservableArray(plainArray).get();
     expect(array).toHaveLength(plainArray.length);
   });
+
+  it('has array-specific methods / properties', () => {
+    const observable = new ObservableArray([1, 2, 3]);
+    const {push, pop, map, filter} = observable.get();
+    expect(typeof push).toBe('function');
+    expect(typeof pop).toBe('function');
+    expect(typeof map).toBe('function');
+    expect(typeof filter).toBe('function');
+    expect(observable.get()).toHaveLength(3);
+  });
 });
 
 describe('getter and setter work correctly', () => {
@@ -83,5 +93,76 @@ describe('ObservableArray supports array-like operations', () => {
     const finishedTaskTitles = taskList.map(mapFn).filter(filterFn);
     expect(Array.from(finishedTaskTitles))
       .toEqual(Array.from(taskList).map(mapFn).filter(filterFn));
+  });
+});
+
+describe('observableArray can be reassigned to other types', () => {
+  let observable;
+  beforeEach(() => {
+    observable = new ObservableArray([1, 2, 3]);
+  });
+
+  it('can be reassign to object', () => {
+    observable.set({ foo: 123 });
+    const val = observable.get();
+    const { push, pop, map, filter, length } = val;
+
+    expect(val).toEqual({ foo: 123 });
+    expect(push).toBeUndefined();
+    expect(pop).toBeUndefined();
+    expect(map).toBeUndefined();
+    expect(filter).toBeUndefined();
+    expect(length).toBeUndefined();
+  });
+
+  it('can be reassign to array', () => {
+    observable.set([4, 5, 6, 7]);
+    const val = observable.get();
+    const { push, pop, map, filter } = val;
+
+    expect(Array.from(val)).toEqual([4, 5, 6, 7]);
+    expect(typeof push).toBe('function');
+    expect(typeof pop).toBe('function');
+    expect(typeof map).toBe('function');
+    expect(typeof filter).toBe('function');
+    expect(val).toHaveLength(4);
+  });
+
+  it('can be reassign to primitive value', () => {
+    observable.set(1);
+    const val = observable.get();
+    const { push, pop, map, filter, length } = val;
+
+    expect(val).toBe(1);
+    expect(push).toBeUndefined();
+    expect(pop).toBeUndefined();
+    expect(map).toBeUndefined();
+    expect(filter).toBeUndefined();
+    expect(length).toBeUndefined();
+  });
+
+  it('can be reassign to null', () => {
+    observable.set(null);
+    expect(observable.get()).toBe(null);
+  });
+
+  it('can be reassign to undefined', () => {
+    observable.set(undefined);
+    expect(observable.get()).toBe(undefined);
+  });
+
+  it('can be reassign again and again', () => {
+    observable.set(1);
+    observable.set({});
+    observable.set([4, 5, 6, 7]);
+    const val = observable.get();
+    const { push, pop, map, filter } = val;
+
+    expect(Array.from(val)).toEqual([4, 5, 6, 7]);
+    expect(typeof push).toBe('function');
+    expect(typeof pop).toBe('function');
+    expect(typeof map).toBe('function');
+    expect(typeof filter).toBe('function');
+    expect(val).toHaveLength(4);
   });
 });

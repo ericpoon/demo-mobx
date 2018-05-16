@@ -339,6 +339,3 @@ describe('@observable creates non-observable with observable properties within',
     expect(mockFn).toHaveBeenCalledTimes(8);
   });
 });
-
-describe('@observable changes type accordingly after reassignment', () => {
-});
