@@ -5,7 +5,7 @@ class ObservableObject extends ObservableInterface {
   constructor(object, { name = '' } = {}) {
     super('[object] ' + name, false);
     this._name = name;
-    this._initializeObject(object);
+    this.object = ObservableObject._initializeObject(object, this._name);
   }
 
   get = () => {
@@ -13,14 +13,14 @@ class ObservableObject extends ObservableInterface {
     return this.object;
   };
 
-  set = (newObject) => {
+  set = (newProperty) => {
     // todo: use getObservableWithCorrectType
-    this._initializeObject(newObject);
+    this.object = ObservableObject._initializeObject(newProperty, this._name);
     this._triggerAutorun();
   };
 
-  // todo: change to pure function
-  _initializeObject(plainObject = {}) {
+  // (√) todo: change to pure function
+  static _initializeObject(plainObject = {}, name) {
     if (plainObject === null) plainObject = {};
 
     const keys = Object.keys(plainObject);
@@ -28,7 +28,7 @@ class ObservableObject extends ObservableInterface {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const value = plainObject[key];
-      const fullyQualifiedName = this._name + '#' + key + '#' + Math.random().toString().substr(2, 4);
+      const fullyQualifiedName = !name ? undefined : name + '#' + key + '#' + Math.random().toString().substr(2, 4);
       const observableProp = getObservableWithCorrectType(value, fullyQualifiedName);
       Object.defineProperty(object, key, {
         enumerable: true,
@@ -41,7 +41,8 @@ class ObservableObject extends ObservableInterface {
         },
       });
     }
-    this.object = object;
+
+    return object;
   }
 }
 

@@ -5,8 +5,17 @@ class ObservableArray extends ObservableInterface {
   constructor(array, { name = '' } = {}) {
     super('[array] ' + name, false);
     this._name = name;
-    this._initializeArray(array);
+    this.array = ObservableArray._initializeArray(array, this._getMethodList(), this._name);
   }
+
+  _getMethodList = () => {
+    return {
+      push: this.push,
+      pop: this.pop,
+      filter: this.filter,
+      map: this.map,
+    };
+  };
 
   get = () => {
     this._registerAutorun(this);
@@ -15,7 +24,7 @@ class ObservableArray extends ObservableInterface {
 
   set = (array) => {
     // todo: use getObservableWithCorrectType
-    this._initializeArray(array);
+    this.array = ObservableArray._initializeArray(array, this._getMethodList(), this._name);
     this._triggerAutorun();
   };
 
@@ -60,27 +69,27 @@ class ObservableArray extends ObservableInterface {
     return new ObservableArray(plainArr.map(fn), { name }).array;
   };
 
-  // todo: change to pure function
-  _initializeArray(plainArray = []) {
-    this.array = {
+  // (√) todo: change to pure function
+  static _initializeArray(plainArray = [], arrayMethods, name) {
+    const array = {
       length: 0,
-      push: this.push,
-      pop: this.pop,
-      filter: this.filter,
-      map: this.map,
     };
 
-    Object.keys(this.array).forEach(key => {
-      Object.defineProperty(this.array, key, { enumerable: false });
+    Object.keys(arrayMethods).forEach(key => {
+      array[key] = arrayMethods[key];
+    });
+
+    Object.keys(array).forEach(key => {
+      Object.defineProperty(array, key, { enumerable: false });
     });
 
     if (plainArray && plainArray.length) {
-      this.array.length = plainArray.length;
+      array.length = plainArray.length;
       for (let i = 0; i < plainArray.length; i++) {
         const value = plainArray[i];
-        const fullyQualifiedName = this._name + '#' + i + '#' + Math.random().toString().substr(2, 4);
+        const fullyQualifiedName = !name ? undefined : name + '#' + i + '#' + Math.random().toString().substr(2, 4);
         const observableProp = getObservableWithCorrectType(value, fullyQualifiedName);
-        Object.defineProperty(this.array, i, {
+        Object.defineProperty(array, i, {
           enumerable: true,
           configurable: true,
           get() {
@@ -92,6 +101,8 @@ class ObservableArray extends ObservableInterface {
         });
       }
     }
+
+    return array;
   }
 }
 
