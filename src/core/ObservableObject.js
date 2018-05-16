@@ -21,6 +21,8 @@ class ObservableObject extends ObservableInterface {
 
   // todo: change to pure function
   _initializeObject(plainObject = {}) {
+    if (plainObject === null) plainObject = {};
+
     const keys = Object.keys(plainObject);
     const object = {};
     for (let i = 0; i < keys.length; i++) {
