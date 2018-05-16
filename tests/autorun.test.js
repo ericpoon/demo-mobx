@@ -335,6 +335,7 @@ describe('autorun can be disposed properly', () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
     disposer();
     invoice.price = 25;
+    invoice.amount = 100;
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });
