@@ -1,5 +1,6 @@
 import { observable } from '../src/core';
 import autorun from '../src/core/autorun';
+import { getArgsInLastCall } from './helpers/mockFunctionHelper';
 
 describe('@observable is initialized correctly', () => {
   describe('works for primitive values', () => {
@@ -191,14 +192,6 @@ describe('@observable remains as an observable property after reassignment / ope
     @observable object = { 'a': 1, 'b': 2 };
   }
 
-  function getGetterToString(instance, name) {
-    return Object.getOwnPropertyDescriptor(instance, name).get.toString();
-  }
-
-  function getArgInLastCall(mockFn) {
-    return Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][0]);
-  }
-
   let tester;
   let mockFn;
   beforeEach(() => {
@@ -217,10 +210,10 @@ describe('@observable remains as an observable property after reassignment / ope
     expect(mockFn).toHaveBeenLastCalledWith(undefined);
 
     tester.primitive = null;
-    expect(getArgInLastCall(mockFn)).toEqual({});
+    expect(getArgsInLastCall(mockFn)[0]).toEqual({});
 
     tester.primitive = [100, 101];
-    expect(getArgInLastCall(mockFn)).toEqual([100, 101]);
+    expect(getArgsInLastCall(mockFn)[0]).toEqual([100, 101]);
 
     tester.primitive = tester.array;
     expect(mockFn).toHaveBeenLastCalledWith(tester.array);
@@ -241,6 +234,10 @@ describe('@observable remains as an observable property after reassignment / ope
 describe('@observable creates non-observable with observable properties within', () => {
   class Tester {
     @observable array = [1, 2, 3, 4];
+  }
+
+  function getArgInLastCall(mockFn) {
+    return Array.from(mockFn.mock.calls[mockFn.mock.calls.length - 1][0]);
   }
 
   let tester;
