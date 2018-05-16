@@ -14,10 +14,12 @@ class ObservableObject extends ObservableInterface {
   };
 
   set = (newObject) => {
+    // todo: use getObservableWithCorrectType
     this._initializeObject(newObject);
     this._triggerAutorun();
   };
 
+  // todo: change to pure function
   _initializeObject(plainObject = {}) {
     const keys = Object.keys(plainObject);
     const object = {};

@@ -159,6 +159,7 @@ describe('autorun gets triggered properly', () => {
       autorun(() => mockFn(taskList.tasks.map(i => i)));
       expect(mockFn).toHaveBeenCalledTimes(1);
       taskList.tasks[0] = { title: 'go swimming' };
+      expect(getArgInLastCall(mockFn)).toEqual([{ title: 'go swimming' }, ITEM_2]);
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
@@ -169,6 +170,7 @@ describe('autorun gets triggered properly', () => {
       autorun(() => mockFn(taskList.tasks.map(i => i)));
       expect(mockFn).toHaveBeenCalledTimes(1);
       taskList.tasks[0].title = 'go swimming';
+      expect(getArgInLastCall(mockFn)).toEqual([{ title: 'go swimming' }, ITEM_2]);
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 

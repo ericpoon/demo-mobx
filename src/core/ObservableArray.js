@@ -14,6 +14,7 @@ class ObservableArray extends ObservableInterface {
   };
 
   set = (array) => {
+    // todo: use getObservableWithCorrectType
     this._initializeArray(array);
     this._triggerAutorun();
   };
@@ -46,15 +47,20 @@ class ObservableArray extends ObservableInterface {
   filter = (fn) => {
     const plainArr = Array.from(this.array);
     const name = `filtered#${Math.random().toString().substr(2, 4)}`;
+
+    // todo: use _initializeArray here
     return new ObservableArray(plainArr.filter(fn), { name }).array;
   };
 
   map = (fn) => {
     const plainArr = Array.from(this.array);
     const name = `mapped#${Math.random().toString().substr(2, 4)}`;
+
+    // todo: use _initializeArray here
     return new ObservableArray(plainArr.map(fn), { name }).array;
   };
 
+  // todo: change to pure function
   _initializeArray(plainArray = []) {
     this.array = {
       length: 0,

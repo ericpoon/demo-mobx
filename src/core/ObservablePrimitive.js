@@ -12,6 +12,7 @@ class ObservablePrimitive extends ObservableInterface {
   };
 
   set = (newValue) => {
+    // todo: use getObservableWithCorrectType
     this.value = newValue;
     this._triggerAutorun();
   };
