@@ -318,3 +318,23 @@ describe('autorun gets triggered properly', () => {
 
   });
 });
+
+describe('autorun can be disposed properly', () => {
+  let mockFn;
+  let invoice;
+  beforeEach(() => {
+    mockFn = jest.fn();
+    invoice = new Invoice(10, 3);
+  });
+
+  it('should be disposed and does not run again', () => {
+    const disposer = autorun(() => mockFn(invoice.total));
+    expect(mockFn).toHaveBeenLastCalledWith(10 * 3);
+    invoice.price = 15;
+    expect(mockFn).toHaveBeenLastCalledWith(15 * 3);
+    expect(mockFn).toHaveBeenCalledTimes(2);
+    disposer();
+    invoice.price = 25;
+    expect(mockFn).toHaveBeenCalledTimes(2);
+  });
+});
