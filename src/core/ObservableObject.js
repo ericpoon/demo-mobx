@@ -19,7 +19,13 @@ class ObservableObject extends ObservableInterface {
   };
 
   _initializeObject(plainObject = {}) {
-    if (plainObject === null) plainObject = {};
+    /** null should never be passed into this function,
+     * but we keep this checking as a good practice of defensive programming
+     */
+    if (plainObject === null) {
+      this.object = getObservableWithCorrectType(null, this._name).get();
+      return;
+    }
 
     const keys = Object.keys(plainObject);
     const object = {};
