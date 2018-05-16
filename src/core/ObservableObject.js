@@ -19,7 +19,6 @@ class ObservableObject extends ObservableInterface {
     this._triggerAutorun();
   };
 
-  // todo: change to pure function
   _initializeObject(plainObject = {}) {
     if (plainObject === null) plainObject = {};
 

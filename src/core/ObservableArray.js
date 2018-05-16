@@ -48,7 +48,8 @@ class ObservableArray extends ObservableInterface {
     const plainArr = Array.from(this.array);
     const name = `filtered#${Math.random().toString().substr(2, 4)}`;
 
-    // todo: use _initializeArray here
+    /** We must create a new observable array object so the `this` is bound correctly to the new one;
+     * This doesn't lead to over-subscribing issue because we don't access the new array via getter*/
     return new ObservableArray(plainArr.filter(fn), { name }).array;
   };
 
@@ -56,11 +57,9 @@ class ObservableArray extends ObservableInterface {
     const plainArr = Array.from(this.array);
     const name = `mapped#${Math.random().toString().substr(2, 4)}`;
 
-    // todo: use _initializeArray here
     return new ObservableArray(plainArr.map(fn), { name }).array;
   };
 
-  // todo: change to pure function
   _initializeArray(plainArray = []) {
     this.array = {
       length: 0,
