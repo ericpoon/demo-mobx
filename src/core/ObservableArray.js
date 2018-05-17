@@ -43,6 +43,27 @@ class ObservableArray extends ObservableInterface {
     return lastItem;
   };
 
+  // todo: add tests for this method
+  remove = (idx) => {
+    if (idx < 0 || idx >= this.array.length) return;
+
+    const removed = this.array[idx];
+    if (idx === 0 && this.array.length === 1) {
+      delete this.array[0];
+    } else if (idx === this.array.length - 1) {
+      delete this.array[idx];
+    } else {
+      for (let i = idx; i < this.array.length - 1; i++) {
+        this.array[i] = this.array[i + 1];
+      }
+      delete this.array[this.array.length - 1];
+    }
+    this.array.length -= 1;
+
+    this._triggerAutorun();
+    return removed;
+  };
+
   filter = (fn) => {
     const plainArr = Array.from(this.array);
     const name = `filtered#${Math.random().toString().substr(2, 4)}`;
@@ -70,6 +91,7 @@ class ObservableArray extends ObservableInterface {
       length: 0,
       push: this.push,
       pop: this.pop,
+      remove: this.remove,
       filter: this.filter,
       map: this.map,
     };
