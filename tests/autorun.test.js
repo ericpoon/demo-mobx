@@ -79,6 +79,68 @@ describe('autorun subscribes and unsubscribes correctly', () => {
 });
 
 describe('autorun gets triggered properly', () => {
+  describe('multiple autoruns can be triggered', () => {
+    let invoice;
+    let mockFnOne;
+    let mockFnTwo;
+    let mockFnThree;
+    beforeEach(() => {
+      invoice = new Invoice(10, 1);
+      mockFnOne = jest.fn();
+      mockFnTwo = jest.fn();
+      mockFnThree = jest.fn();
+    });
+
+    it('triggers more than one autorun for the same observable property', () => {
+      autorun(() => mockFnOne(invoice.amount));
+      autorun(() => mockFnTwo(invoice.amount));
+      autorun(() => mockFnThree(invoice.amount));
+      expect(mockFnOne).toHaveBeenCalledTimes(1);
+      expect(mockFnTwo).toHaveBeenCalledTimes(1);
+      expect(mockFnThree).toHaveBeenCalledTimes(1);
+
+      invoice.amount = 1000;
+
+      expect(mockFnOne).toHaveBeenCalledTimes(2);
+      expect(mockFnOne).toHaveBeenLastCalledWith(1000);
+
+      expect(mockFnTwo).toHaveBeenCalledTimes(2);
+      expect(mockFnTwo).toHaveBeenLastCalledWith(1000);
+
+      expect(mockFnThree).toHaveBeenCalledTimes(2);
+      expect(mockFnThree).toHaveBeenLastCalledWith(1000);
+    });
+    it('triggers more than one autorun for a computed property', () => {
+      autorun(() => mockFnOne(invoice.total));
+      autorun(() => mockFnTwo(invoice.total));
+      autorun(() => mockFnThree(invoice.total));
+      expect(mockFnOne).toHaveBeenCalledTimes(1);
+      expect(mockFnTwo).toHaveBeenCalledTimes(1);
+      expect(mockFnThree).toHaveBeenCalledTimes(1);
+
+      invoice.amount = 1000;
+
+      expect(mockFnOne).toHaveBeenCalledTimes(2);
+      expect(mockFnOne).toHaveBeenLastCalledWith(10 * 1000);
+
+      expect(mockFnTwo).toHaveBeenCalledTimes(2);
+      expect(mockFnTwo).toHaveBeenLastCalledWith(10 * 1000);
+
+      expect(mockFnThree).toHaveBeenCalledTimes(2);
+      expect(mockFnThree).toHaveBeenLastCalledWith(10 * 1000);
+
+      invoice.price = 5;
+
+      expect(mockFnOne).toHaveBeenCalledTimes(3);
+      expect(mockFnOne).toHaveBeenLastCalledWith(5 * 1000);
+
+      expect(mockFnTwo).toHaveBeenCalledTimes(3);
+      expect(mockFnTwo).toHaveBeenLastCalledWith(5 * 1000);
+
+      expect(mockFnThree).toHaveBeenCalledTimes(3);
+      expect(mockFnThree).toHaveBeenLastCalledWith(5 * 1000);
+    });
+  });
   describe('autorun works for primitive values', () => {
     let invoice;
     let mock;
