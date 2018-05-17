@@ -6,17 +6,15 @@ class Main extends Component {
   state = { count: 0 };
 
   componentDidMount() {
-    console.log('component did mount');
     autorun(() => {
-      console.log('changing state', tester.count);
-      this.setState({ count: tester.count }, () => console.log('state changed'));
+      this.setState({ count: tester.count });
     });
   }
 
   render() {
     return (
       <div>
-        Hello, React and MobX! {this.state.count}
+        <p>Count: {this.state.count}</p>
       </div>
     );
   }
@@ -29,16 +27,8 @@ class Tester {
 
 const tester = new Tester();
 
-ReactDom.render(<Main count={tester.count} />, document.getElementById('app'));
+ReactDom.render(<Main />, document.getElementById('app'));
 
 setInterval(() => {
   tester.count += 1;
-}, 1000);
-
-autorun(() => {
-  console.log(tester.count);
-});
-
-autorun(() => {
-  console.log(tester.count);
-});
+}, 300);
