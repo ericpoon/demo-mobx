@@ -26,6 +26,7 @@ export default class ObservableInterface {
   _triggerAutorun() {
     for (let i = 0; i < this.autoruns.length; i++) {
       const fn = this.autoruns[i];
+      console.log('running', i);
       fn.run();
     }
   }
