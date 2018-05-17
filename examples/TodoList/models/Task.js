@@ -6,6 +6,5 @@ export default class Task {
     this.done = d;
   }
 
-  @observable title;
   @observable done;
 }

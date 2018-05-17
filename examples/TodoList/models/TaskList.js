@@ -1,7 +1,5 @@
-import { observable } from '../../../src/core';
-
 export default class TaskList {
-  @observable list = [];
+  list = [];
 
   get finished() {
     return this.list.filter(i => i.done);
