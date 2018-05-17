@@ -3,19 +3,18 @@ import ReactDom from 'react-dom';
 import { observable, autorun } from '../../src/core/index';
 
 class Main extends Component {
-  state = { count: 0 };
-
   componentDidMount() {
-    const { counter } = this.props;
-
     autorun(() => {
-      this.setState({ count: counter.count });
+      this.render();
+      this.forceUpdate();
     });
   }
 
   render() {
+    const { counter } = this.props;
+
     return (
-      <p>Count: {this.state.count}</p>
+      <p>Count: {counter.count}</p>
     );
   }
 }
@@ -27,8 +26,9 @@ class Counter {
 
 const counter = new Counter();
 
-ReactDom.render(<Main counter={counter} />, document.getElementById('counter-app'));
-
 setInterval(() => {
   counter.count += 1;
 }, 300);
+
+const app = document.getElementById('counter-app');
+if (app) ReactDom.render(<Main counter={counter} />, app);
