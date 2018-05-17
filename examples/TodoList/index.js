@@ -28,13 +28,13 @@ class Main extends Component {
 
   render() {
     const { tasks } = this.props;
+    const { finished, unfinished } = tasks;
 
     return (
       <div>
         <h2>Task List</h2>
-        <p>Summary: {tasks.finished.length} completed and {tasks.unfinished.length} to be done.</p>
-        {Array.from(tasks.list).map(task => {
-          // fixme: should not use Array.from
+        <p>Summary: {finished.length} completed and {unfinished.length} to be done.</p>
+        {tasks.list.map(task => {
           return <div key={task.title}>{this.taskItem(task)}</div>;
         })}
       </div>
