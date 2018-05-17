@@ -24,10 +24,14 @@ export default class ObservableInterface {
   }
 
   _triggerAutorun() {
-    for (let i = 0; i < this.autoruns.length; i++) {
-      const fn = this.autoruns[i];
-      console.log('running', i);
+    const safeCopyAutoruns = [...this.autoruns]; // this.autoruns may be mutated by disposer
+    for (let i = 0; i < safeCopyAutoruns.length; i++) {
+      const fn = safeCopyAutoruns[i];
       fn.run();
     }
+  }
+
+  _unregisterAutorun(idx) {
+    this.autoruns.splice(idx, 1);
   }
 }
