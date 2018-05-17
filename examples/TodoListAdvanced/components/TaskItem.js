@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TaskItem = ({ task }) => {
+const TaskItem = ({ task, onEditClick, onDeleteClick }) => {
   const { title, done } = task;
   const onTaskClick = () => {
     task.done = !task.done;
@@ -12,6 +12,9 @@ const TaskItem = ({ task }) => {
         <input type={'checkbox'} checked={done} onClick={onTaskClick} />
         {title}
       </label>
+      <button onClick={onEditClick}>Edit</button>
+      <button onClick={onDeleteClick}>Delete</button>
+      <hr />
     </div>
   );
 };
