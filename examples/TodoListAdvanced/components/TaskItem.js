@@ -9,7 +9,7 @@ const TaskItem = ({ task, onEditClick, onDeleteClick }) => {
   return (
     <div>
       <label style={{ color: done ? 'green' : 'red', fontSize: 20, lineHeight: 2 }}>
-        <input type={'checkbox'} checked={done} onClick={onTaskClick} />
+        <input type={'checkbox'} checked={done} onChange={onTaskClick} />
         {title}
       </label>
       <button onClick={onEditClick}>Edit</button>
