@@ -6,29 +6,29 @@ class Main extends Component {
   state = { count: 0 };
 
   componentDidMount() {
+    const { counter } = this.props;
+
     autorun(() => {
-      this.setState({ count: tester.count });
+      this.setState({ count: counter.count });
     });
   }
 
   render() {
     return (
-      <div>
-        <p>Count: {this.state.count}</p>
-      </div>
+      <p>Count: {this.state.count}</p>
     );
   }
 }
 
-class Tester {
+class Counter {
   @observable
   count = 0;
 }
 
-const tester = new Tester();
+const counter = new Counter();
 
-ReactDom.render(<Main />, document.getElementById('counter-app'));
+ReactDom.render(<Main counter={counter} />, document.getElementById('counter-app'));
 
 setInterval(() => {
-  tester.count += 1;
+  counter.count += 1;
 }, 300);
