@@ -5,8 +5,8 @@ import TaskList from './models/TaskList';
 import Main from './components/Main';
 
 const tasks = new TaskList();
-const taskA = new Task('Pick up laundry', false);
-const taskB = new Task('Go to supermarket', false);
+const taskA = new Task('Pick up laundry', true);
+const taskB = new Task('Go to supermarket', true);
 const taskC = new Task('Take medicine', false);
 const taskD = new Task('Housekeeping', false);
 const taskE = new Task('Appointment with clients', false);
