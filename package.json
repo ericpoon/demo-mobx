@@ -6,8 +6,8 @@
   "scripts": {
     "build": "webpack",
     "start": "node ./dist/bundle.js",
-    "start:demo": "webpack-dev-server --config ./demo/webpack.config.js",
-    "build:demo": "webpack --config ./demo/webpack.config.js",
+    "start:demo": "webpack-dev-server --config ./examples/webpack.config.js",
+    "build:demo": "webpack --config ./examples/webpack.config.js",
     "test": "jest"
   },
   "dependencies": {
