@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
-import { observable, autorun } from '../src/core';
+import { observable, autorun } from '../../src/core/index';
 
 class Main extends Component {
   state = { count: 0 };
@@ -27,7 +27,7 @@ class Tester {
 
 const tester = new Tester();
 
-ReactDom.render(<Main />, document.getElementById('app'));
+ReactDom.render(<Main />, document.getElementById('counter-app'));
 
 setInterval(() => {
   tester.count += 1;
