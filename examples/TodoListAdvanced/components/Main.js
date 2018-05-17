@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { autorun } from '../../../src/core';
 import TaskItemComponent from './TaskItem';
-import Task from '../../TodoList/models/Task';
+import InputComponent from './Input';
+import Task from '../models/Task';
+import Input from '../models/Input';
 
 export default class Main extends Component {
   componentDidMount() {
@@ -15,15 +17,17 @@ export default class Main extends Component {
     editingIdx: -1,
   };
 
+  inputObservable = new Input();
+
   onTaskEditClick = (task, idx) => {
-    this.taskTitleInput.value = task.title;
+    this.inputObservable.value = task.title;
     this.setState({ editingIdx: idx });
   };
 
   onTaskDeleteClick = (task, idx) => {
     if (idx === this.state.editingIdx) {
       this.setState({ editingIdx: -1 });
-      this.taskTitleInput.value = '';
+      this.inputObservable.value = '';
     }
     this.props.tasks.list.remove(idx);
   };
@@ -33,7 +37,6 @@ export default class Main extends Component {
     const { finished, unfinished } = tasks;
     const list = [...tasks.list]; // safe copy to avoid index issue due to deletion
     const { editingIdx } = this.state;
-
     return (
       <div>
         <h2>Task List (Advanced)</h2>
@@ -49,24 +52,21 @@ export default class Main extends Component {
             </div>
           );
         })}
-        <div>
-          {editingIdx >= 0 ? 'Edit task:' : 'New task:'}
-          <input type={'text'} ref={ref => this.taskTitleInput = ref} />
-          <button
-            onClick={() => {
-              if (editingIdx >= 0) {
-                tasks.list[editingIdx].title = this.taskTitleInput.value;
-                this.setState({ editingIdx: -1 });
-                this.taskTitleInput.value = '';
-              } else {
-                tasks.list.push(new Task(this.taskTitleInput.value, false));
-                this.taskTitleInput.value = '';
-              }
-            }}
-          >
-            {editingIdx >= 0 ? 'Save' : 'Add'}
-          </button>
-        </div>
+        <InputComponent
+          label={editingIdx >= 0 ? 'Edit task:' : 'New task:'}
+          buttonText={editingIdx >= 0 ? 'Save' : 'Add'}
+          inputObservable={this.inputObservable}
+          onSubmit={() => {
+            if (editingIdx >= 0) {
+              tasks.list[editingIdx].title = this.inputObservable.value;
+              this.setState({ editingIdx: -1 });
+              this.inputObservable.value = '';
+            } else {
+              tasks.list.push(new Task(this.inputObservable.value, false));
+              this.inputObservable.value = '';
+            }
+          }}
+        />
       </div>
     );
   }
