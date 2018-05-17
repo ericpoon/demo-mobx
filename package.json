@@ -4,9 +4,9 @@
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode development",
+    "build": "webpack",
     "start": "node ./dist/bundle.js",
-    "start:dev": "webpack-dev-server",
+    "start:demo": "webpack-dev-server --config ./demo/webpack.config.js",
     "test": "jest"
   },
   "dependencies": {

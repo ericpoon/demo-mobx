@@ -1,10 +1,10 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './demo/index.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
   },
   module: {
     rules: [{
@@ -12,6 +12,10 @@ module.exports = {
       loader: 'babel-loader',
       exclude: /node_modules/,
     }],
+  },
+  devServer: {
+    contentBase: path.join(__dirname, 'public'),
+    compress: true,
   },
   mode: 'development',
 };
