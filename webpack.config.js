@@ -17,4 +17,5 @@ module.exports = {
     contentBase: path.join(__dirname, 'public'),
     compress: true,
   },
+  mode: 'development',
 };
