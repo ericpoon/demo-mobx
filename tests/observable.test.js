@@ -312,6 +312,11 @@ describe('@observable creates non-observable with observable properties within',
   });
 
   it('array items are no longer observable if the array is returned from array operations (mapping etc.)', () => {
+    /**
+     * the returned array should not contain observable items, as they are copied from the original array,
+     * and those items in original array are already observable,
+     * in short, there is no point to have two observable items that are exactly the same
+     */
     let arrayMapped = tester.array.map(i => i * 3);
     let arrayFiltered = tester.array.filter(i => i % 2 === 0);
     let arrayMappedFiltered = tester.array.map(i => i * 3).filter(i => i % 2 === 0);
