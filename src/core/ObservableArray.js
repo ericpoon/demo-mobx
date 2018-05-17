@@ -47,16 +47,22 @@ class ObservableArray extends ObservableInterface {
     const plainArr = Array.from(this.array);
     const name = `filtered#${Math.random().toString().substr(2, 4)}`;
 
-    /** We must create a new observable array object so the `this` is bound correctly to the new one;
-     * This doesn't lead to over-subscribing issue because we don't access the new array via getter*/
-    return new ObservableArray(plainArr.filter(fn), { name }).array;
+    // /** We must create a new observable array object so the `this` is bound correctly to the new one;
+    //  * This doesn't lead to over-subscribing issue because we don't access the new array via getter*/
+    // return new ObservableArray(plainArr.filter(fn), { name }).array;
+
+    /* Perhaps the returned array's element should not be observable,
+    as it's a copied version and the original one is still observable */
+    return plainArr.filter(fn);
   };
 
   map = (fn) => {
     const plainArr = Array.from(this.array);
     const name = `mapped#${Math.random().toString().substr(2, 4)}`;
 
-    return new ObservableArray(plainArr.map(fn), { name }).array;
+    // return new ObservableArray(plainArr.map(fn), { name }).array;
+
+    return plainArr.map(fn);
   };
 
   _initializeArray(plainArray = []) {
