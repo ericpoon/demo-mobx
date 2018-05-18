@@ -57,13 +57,23 @@ describe('ObservableArray supports array-like operations', () => {
     expect(simpleArr[simpleArr.length - 1]).toBe(item);
   });
 
-  it('can pop', () => {
-    const oldLength = simpleArr.length;
-    const lastItem = simpleArr[simpleArr.length - 1];
-    const poppedItem = simpleArr.pop();
-    expect(simpleArr).toHaveLength(oldLength - 1);
-    expect(poppedItem).toBe(lastItem);
-    expect(simpleArr[simpleArr.length]).toBeUndefined();
+  describe('can pop', () => {
+    it('can pop', () => {
+      const oldLength = simpleArr.length;
+      const lastItem = simpleArr[simpleArr.length - 1];
+      const poppedItem = simpleArr.pop();
+      expect(simpleArr).toHaveLength(oldLength - 1);
+      expect(poppedItem).toBe(lastItem);
+      expect(simpleArr[simpleArr.length]).toBeUndefined();
+    });
+
+    it('throws if popping an empty array', () => {
+      const emptyArr = new ObservableArray([]).get();
+      expect(() => {
+        emptyArr.pop();
+      }).toThrow();
+      expect(emptyArr).toHaveLength(0);
+    });
   });
 
   describe('can remove', () => {

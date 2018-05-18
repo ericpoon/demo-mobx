@@ -36,6 +36,10 @@ class ObservableArray extends ObservableInterface {
   };
 
   pop = () => {
+    if (this.array.length === 0) {
+      throw new Error(`[ObservableArray] Trying to pop an empty array`);
+    }
+
     this.array.length -= 1;
     const lastItem = this.array[this.array.length];
     delete this.array[this.array.length];
