@@ -22,7 +22,7 @@ export default class AutorunFunction {
       const o = this.observables[i];
       const idx = o.autoruns.indexOf(this);
       if (idx >= 0) {
-        o.autoruns.splice(idx, 1);
+        o._unregisterAutorun(idx);
       }
     }
   };

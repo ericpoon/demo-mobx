@@ -311,31 +311,29 @@ describe('@observable creates non-observable with observable properties within',
     expect(mockFn).toHaveBeenCalledTimes(4);
   });
 
-  it('contains observable items in the returned array from array operations (mapping etc.)', () => {
+  it('array items are no longer observable if the array is returned from array operations (mapping etc.)', () => {
+    /**
+     * the returned array should not contain observable items, as they are copied from the original array,
+     * and those items in original array are already observable,
+     * in short, there is no point to have two observable items that are exactly the same
+     */
     let arrayMapped = tester.array.map(i => i * 3);
     let arrayFiltered = tester.array.filter(i => i % 2 === 0);
     let arrayMappedFiltered = tester.array.map(i => i * 3).filter(i => i % 2 === 0);
     let arrayFilteredMapped = tester.array.filter(i => i % 2 === 0).map(i => i * 3);
-    autorun(() => mockFn(Array.from(arrayMapped)));
-    autorun(() => mockFn(Array.from(arrayFiltered)));
-    autorun(() => mockFn(Array.from(arrayMappedFiltered)));
-    autorun(() => mockFn(Array.from(arrayFilteredMapped)));
+    autorun(() => mockFn(arrayMapped[0]));
+    autorun(() => mockFn(arrayFiltered[0]));
+    autorun(() => mockFn(arrayMappedFiltered[0]));
+    autorun(() => mockFn(arrayFilteredMapped[0]));
     expect(mockFn).toHaveBeenCalledTimes(4);
 
-    // if a property is an observable, then re-assigning it should trigger autorun
+    // if a property is NOT an observable, then re-assigning it should not trigger autorun
 
     arrayMapped[0] = 'foo1';
-    expect(getArgInLastCall(mockFn)[0]).toBe('foo1');
-
     arrayFiltered[0] = 'foo2';
-    expect(getArgInLastCall(mockFn)[0]).toBe('foo2');
-
     arrayMappedFiltered[0] = 'foo3';
-    expect(getArgInLastCall(mockFn)[0]).toBe('foo3');
-
     arrayFilteredMapped[0] = 'foo4';
-    expect(getArgInLastCall(mockFn)[0]).toBe('foo4');
 
-    expect(mockFn).toHaveBeenCalledTimes(8);
+    expect(mockFn).toHaveBeenCalledTimes(4);
   });
 });

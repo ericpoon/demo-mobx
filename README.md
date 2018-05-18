@@ -1,10 +1,18 @@
-# Observable and Computed
+# MobX
 
-The minimal working code for observing primitive values is available at
-commit [`c11313d`](https://github.com/ericpoon/demo-mobx/commit/c11313d04cbd91afb36c2a43bbaca9770b8b2b4c). 
-If you want to have a very basic idea regarding how `@observable` and `autorun()` work,
-it should be a good start point.
-> It's easy! Don't bother starting with the source code of official MobX.
+Implemented based on [MobX](https://github.com/mobxjs/mobx), for fun and learning purpose.
+
+This project supports basic features of MobX including `@observable` and `autorun()`,
+but also implements `@observer` in [mobx-react](https://github.com/mobxjs/mobx-react).
+
+Comprehensive unit tests and integration tests with real react components are included.
+
+---
+
+The minimal working code for observable primitive values (number, string and boolean) is available at
+commit `c11313d`. If you want to have a very basic idea regarding how `@observable` and `autorun()` work,
+it should be a good start point. Checkout to have a look!
+> It's relatively easy to understand! You may not want to start with the source code of official MobX.
 
 ### How `@observable` and `autorun()` work?
 
@@ -25,6 +33,21 @@ Or in other words, here's the flow:
 
 ---
 
-As of commit [`51315bd`](https://github.com/ericpoon/demo-mobx/commit/51315bd), `@observable` and `autorun()` should work well enough to support **primitive
+As of commit `51315bd`, `@observable` and `autorun()` should work well enough to support **primitive
 values, arrays and objects**. Also `@observable` automatically converts array items or object properties into observable properties in a recursive manner. 
 This behaviour is the same as what official MobX library does.
+
+---
+
+As of commit `1ce8a9b`, we have successfully integrated this MobX with React (without `@observer`), and several examples are provided to demo how to use it.
+
+### How to see the demo?
+
+1. `yarn install`
+2. `yarn start:demo`
+
+---
+
+As of commit `1c3d12f`, `@observer` annotation has been added to support the integration with React.
+
+In my opinion, `@observer` is a syntax sugar that simplifies data binding with React.

@@ -20,9 +20,10 @@ describe('ObservableArray constructs correctly', () => {
 
   it('has array-specific methods / properties', () => {
     const observable = new ObservableArray([1, 2, 3]);
-    const {push, pop, map, filter} = observable.get();
+    const { push, pop, remove, map, filter } = observable.get();
     expect(typeof push).toBe('function');
     expect(typeof pop).toBe('function');
+    expect(typeof remove).toBe('function');
     expect(typeof map).toBe('function');
     expect(typeof filter).toBe('function');
     expect(observable.get()).toHaveLength(3);
@@ -56,13 +57,69 @@ describe('ObservableArray supports array-like operations', () => {
     expect(simpleArr[simpleArr.length - 1]).toBe(item);
   });
 
-  it('can pop', () => {
-    const oldLength = simpleArr.length;
-    const lastItem = simpleArr[simpleArr.length - 1];
-    const poppedItem = simpleArr.pop();
-    expect(simpleArr).toHaveLength(oldLength - 1);
-    expect(poppedItem).toBe(lastItem);
-    expect(simpleArr[simpleArr.length]).toBeUndefined();
+  describe('can pop', () => {
+    it('can pop', () => {
+      const oldLength = simpleArr.length;
+      const lastItem = simpleArr[simpleArr.length - 1];
+      const poppedItem = simpleArr.pop();
+      expect(simpleArr).toHaveLength(oldLength - 1);
+      expect(poppedItem).toBe(lastItem);
+      expect(simpleArr[simpleArr.length]).toBeUndefined();
+    });
+
+    it('throws if popping an empty array', () => {
+      const emptyArr = new ObservableArray([]).get();
+      expect(() => {
+        emptyArr.pop();
+      }).toThrow();
+      expect(emptyArr).toHaveLength(0);
+    });
+  });
+
+  describe('can remove', () => {
+    it('can remove an item in the middle', () => {
+      const oldLength = simpleArr.length;
+      const itemToRemove = simpleArr[2];
+      const removedItem = simpleArr.remove(2);
+      expect(simpleArr).toHaveLength(oldLength - 1);
+      expect(removedItem).toBe(itemToRemove);
+      expect(simpleArr[simpleArr.length]).toBeUndefined();
+    });
+
+    it('can remove the first item', () => {
+      const oldLength = simpleArr.length;
+      const itemToRemove = simpleArr[0];
+      const removedItem = simpleArr.remove(0);
+      expect(simpleArr).toHaveLength(oldLength - 1);
+      expect(removedItem).toBe(itemToRemove);
+      expect(simpleArr[simpleArr.length]).toBeUndefined();
+    });
+
+    it('can remove the last item', () => {
+      const oldLength = simpleArr.length;
+      const itemToRemove = simpleArr[simpleArr.length - 1];
+      const removedItem = simpleArr.remove(simpleArr.length - 1);
+      expect(simpleArr).toHaveLength(oldLength - 1);
+      expect(removedItem).toBe(itemToRemove);
+      expect(simpleArr[simpleArr.length]).toBeUndefined();
+    });
+
+    it('can remove the only item', () => {
+      const singleItemArray = new ObservableArray(['foo']).get();
+      const removedItem = singleItemArray.remove(0);
+      expect(singleItemArray).toHaveLength(0);
+      expect(removedItem).toBe('foo');
+      expect(singleItemArray[0]).toBeUndefined();
+    });
+
+    it('throws if removing index out of range', () => {
+      const oldLength = simpleArr.length;
+      expect(() => {
+        simpleArr.remove(simpleArr.length);
+      }).toThrow(/[ObservableArray]/);
+      expect(simpleArr).toHaveLength(oldLength);
+    });
+
   });
 
   it('can map', () => {
@@ -156,11 +213,12 @@ describe('observableArray can be reassigned to other types', () => {
     observable.set({});
     observable.set([4, 5, 6, 7]);
     const val = observable.get();
-    const { push, pop, map, filter } = val;
+    const { push, pop, remove, map, filter } = val;
 
     expect(Array.from(val)).toEqual([4, 5, 6, 7]);
     expect(typeof push).toBe('function');
     expect(typeof pop).toBe('function');
+    expect(typeof remove).toBe('function');
     expect(typeof map).toBe('function');
     expect(typeof filter).toBe('function');
     expect(val).toHaveLength(4);
