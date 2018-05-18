@@ -1,5 +1,6 @@
 /node_modules
 /.idea
 /dist
+/coverage
 *.log
 examples/public/bundle.js
