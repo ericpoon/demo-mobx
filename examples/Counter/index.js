@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
-import { observable, autorun } from '../../src/core/index';
+import { observable, observer } from '../../src/core/index';
 
+@observer
 class Main extends Component {
-  componentDidMount() {
-    autorun(() => {
-      this.render();
-      this.forceUpdate();
-    });
-  }
-
   render() {
     const { counter } = this.props;
 

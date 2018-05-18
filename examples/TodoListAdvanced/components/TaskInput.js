@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-import { autorun } from '../../../src/core';
+import { observer } from '../../../src/core';
 
+@observer
 class TaskInput extends Component {
-
-  componentDidMount() {
-    autorun(() => {
-      this.render();
-      this.forceUpdate();
-    });
-  }
-
   render() {
     const { label, buttonText, task, onSubmit } = this.props;
     return (
