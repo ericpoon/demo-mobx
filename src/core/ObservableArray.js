@@ -43,9 +43,10 @@ class ObservableArray extends ObservableInterface {
     return lastItem;
   };
 
-  // todo: add tests for this method
   remove = (idx) => {
-    if (idx < 0 || idx >= this.array.length) return;
+    if (idx < 0 || idx >= this.array.length) {
+      throw new Error(`[ObservableArray] Trying to remove at an index out of range: ${idx}`);
+    }
 
     const removed = this.array[idx];
     if (idx === 0 && this.array.length === 1) {
