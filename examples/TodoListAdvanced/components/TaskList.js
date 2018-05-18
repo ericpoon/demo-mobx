@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import { autorun } from '../../../src/core';
+import { observer } from '../../../src/core';
 import TaskItemComponent from './TaskItem';
 import TaskInput from './TaskInput';
 import Task from '../models/Task';
 
-export default class TaskList extends Component {
-  componentDidMount() {
-    autorun(() => {
-      this.render();
-      this.forceUpdate();
-    });
-  }
-
+@observer
+class TaskList extends Component {
   state = {
     editingIdx: -1,
   };
@@ -92,3 +86,5 @@ export default class TaskList extends Component {
     );
   }
 }
+
+export default TaskList;

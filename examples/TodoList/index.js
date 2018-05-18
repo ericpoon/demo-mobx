@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
-import { autorun } from '../../src/core/index';
+import { observer } from '../../src/core';
 import Task from './models/Task';
 import TaskList from './models/TaskList';
 
+@observer
 class Main extends Component {
-
-  componentDidMount() {
-    autorun(() => {
-      this.render();
-      this.forceUpdate();
-    });
-  }
-
   taskItem = (task) => {
     const { title, done } = task;
     const onTaskClick = () => task.done = !task.done;
