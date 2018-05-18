@@ -1,5 +1,5 @@
 {
-  "name": "observable-computed",
+  "name": "demo-mobx",
   "version": "1.0.0",
   "main": "dist/index.js",
   "license": "MIT",
