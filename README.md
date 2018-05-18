@@ -1,4 +1,13 @@
-# Observable and Computed
+# MobX
+
+Implemented based on [MobX](https://github.com/mobxjs/mobx), for fun and learning purpose.
+
+This project supports basic features of MobX including `@observable` and `autorun()`,
+but also implements `@observer` in [mobx-react](https://github.com/mobxjs/mobx-react).
+
+Comprehensive unit tests and integration tests with real react components are included.
+
+---
 
 The minimal working code for observing primitive values is available at
 commit `c11313d`. If you want to have a very basic idea regarding how `@observable` and `autorun()` work,
@@ -30,9 +39,15 @@ This behaviour is the same as what official MobX library does.
 
 ---
 
-As of commit `1ce8a9b`, we have successfully integrated this MobX with React, and several examples are provided to demo how to use it.
+As of commit `1ce8a9b`, we have successfully integrated this MobX with React (without `@observer`), and several examples are provided to demo how to use it.
 
 ### How to see the demo?
 
 1. `yarn install`
 2. `yarn start:demo`
+
+---
+
+As of commit `1c3d12f`, `@observer` annotation has been added to support the integration with React.
+
+In my opinion, `@observer` is a syntax sugar that simplifies data binding with React.
