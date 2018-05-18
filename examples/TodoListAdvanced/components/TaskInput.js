@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { autorun } from '../../../src/core';
 
-class Input extends Component {
+class TaskInput extends Component {
 
   componentDidMount() {
     autorun(() => {
@@ -11,15 +11,15 @@ class Input extends Component {
   }
 
   render() {
-    const { label, buttonText, inputObservable, onSubmit } = this.props;
+    const { label, buttonText, task, onSubmit } = this.props;
     return (
       <div>
         {label}
         <input
           type={'text'}
-          value={inputObservable.value}
+          value={task.title}
           onChange={event => {
-            inputObservable.value = event.target.value;
+            task.title = event.target.value;
           }}
         />
         <button onClick={onSubmit}>{buttonText}</button>
@@ -28,4 +28,4 @@ class Input extends Component {
   }
 }
 
-export default Input;
+export default TaskInput;
