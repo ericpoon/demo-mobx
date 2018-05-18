@@ -9,7 +9,7 @@ Comprehensive unit tests and integration tests with real react components are in
 
 ---
 
-The minimal working code for observing primitive values is available at
+The minimal working code for observable primitive values (number, string and boolean) is available at
 commit `c11313d`. If you want to have a very basic idea regarding how `@observable` and `autorun()` work,
 it should be a good start point. Checkout to have a look!
 > It's relatively easy to understand! You may not want to start with the source code of official MobX.
