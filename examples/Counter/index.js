@@ -3,32 +3,32 @@ import ReactDom from 'react-dom';
 import { observable, autorun } from '../../src/core/index';
 
 class Main extends Component {
-  state = { count: 0 };
-
   componentDidMount() {
     autorun(() => {
-      this.setState({ count: tester.count });
+      this.render();
+      this.forceUpdate();
     });
   }
 
   render() {
+    const { counter } = this.props;
+
     return (
-      <div>
-        <p>Count: {this.state.count}</p>
-      </div>
+      <p>Count: {counter.count}</p>
     );
   }
 }
 
-class Tester {
+class Counter {
   @observable
   count = 0;
 }
 
-const tester = new Tester();
-
-ReactDom.render(<Main />, document.getElementById('counter-app'));
+const counter = new Counter();
 
 setInterval(() => {
-  tester.count += 1;
+  counter.count += 1;
 }, 300);
+
+const app = document.getElementById('counter-app');
+if (app) ReactDom.render(<Main counter={counter} />, app);

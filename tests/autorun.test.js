@@ -234,10 +234,10 @@ describe('autorun gets triggered properly', () => {
       taskList.tasks.push(ITEM_1);
       taskList.tasks.push(ITEM_2);
 
-      autorun(() => mockFn(taskList.tasks.map(i => i)));
+      autorun(() => mockFn(taskList.tasks[0]));
       expect(mockFn).toHaveBeenCalledTimes(1);
       taskList.tasks[0] = { title: 'go swimming' };
-      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([{ title: 'go swimming' }, ITEM_2]);
+      expect(mockFn).toHaveBeenLastCalledWith({ title: 'go swimming' });
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
@@ -245,10 +245,10 @@ describe('autorun gets triggered properly', () => {
       taskList.tasks.push(ITEM_1);
       taskList.tasks.push(ITEM_2);
 
-      autorun(() => mockFn(taskList.tasks.map(i => i)));
+      autorun(() => mockFn(taskList.tasks[0].title));
       expect(mockFn).toHaveBeenCalledTimes(1);
       taskList.tasks[0].title = 'go swimming';
-      expect(Array.from(getArgsInLastCall(mockFn)[0])).toEqual([{ title: 'go swimming' }, ITEM_2]);
+      expect(mockFn).toHaveBeenLastCalledWith('go swimming');
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
