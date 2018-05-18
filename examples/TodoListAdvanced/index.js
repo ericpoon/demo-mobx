@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import Task from './models/Task';
 import TaskList from './models/TaskList';
-import Main from './components/Main';
+import TaskListComponent from './components/TaskList';
 
 const tasks = new TaskList();
 const taskA = new Task('Pick up laundry', true);
@@ -18,4 +18,4 @@ tasks.list.push(taskD);
 tasks.list.push(taskE);
 
 const app = document.getElementById('todo-list-advanced-app');
-if (app) ReactDom.render(<Main tasks={tasks} />, app);
+if (app) ReactDom.render(<TaskListComponent tasks={tasks} />, app);

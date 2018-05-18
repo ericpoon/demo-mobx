@@ -4,7 +4,7 @@ import TaskItemComponent from './TaskItem';
 import TaskInput from './TaskInput';
 import Task from '../models/Task';
 
-export default class Main extends Component {
+export default class TaskList extends Component {
   componentDidMount() {
     autorun(() => {
       this.render();
