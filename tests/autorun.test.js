@@ -401,3 +401,45 @@ describe('autorun can be disposed properly', () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });
+
+describe('async autorun', () => {
+  it('runs asynchronously', () => {
+    expect.assertions(7);
+
+    class Tester {
+      @observable value = 0;
+    }
+
+    const tester = new Tester();
+    const spy = jest.fn();
+
+    jest.useFakeTimers();
+
+    autorun((runInAction) => {
+      setTimeout(() => {
+        runInAction(() => {
+          spy(tester.value);
+        });
+      }, 1000);
+    });
+
+    jest.runAllTimers();
+
+    expect(spy).toHaveBeenLastCalledWith(0);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    setTimeout(() => {
+      tester.value = 100;
+      jest.runAllTimers();
+      expect(spy).toHaveBeenLastCalledWith(100);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+      tester.value = 200;
+      jest.runAllTimers();
+      expect(spy).toHaveBeenLastCalledWith(200);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+      expect(spy).toHaveBeenCalledTimes(3);
+    }, 2000);
+
+    jest.runAllTimers();
+  });
+});
