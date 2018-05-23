@@ -6,7 +6,12 @@ export default class AutorunFunction {
     Object.defineProperty(this, '_fn', { enumerable: false });
   }
 
-  _runInAction = (fn) => { /* this is to support async actions */
+  _runInAction = (fn) => {
+    /**
+     * this is to support async autorun functions,
+     * we only need runInAction() when the autorun function
+     * accesses an observable in an async manner
+     */
     this.dispose();
 
     ObservableInterface.initializingAutorun = this;

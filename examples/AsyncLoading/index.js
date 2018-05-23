@@ -6,7 +6,9 @@ import { observable, observer } from '../../src/core/index';
  * Note that even though we fetch data in an async way,
  * there's no need for extra configuration/decoration/wrapping,
  * because the render() method of react component is synchronous.
- * Hence, we don't even need runInAction here.
+ * Hence, we don't even need runInAction() here.
+ * render() method is indeed an autorun function, we only need runInAction()
+ * when the autorun function accesses an observable in an async manner
  */
 
 @observer
