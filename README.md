@@ -51,3 +51,8 @@ As of commit `1ce8a9b`, we have successfully integrated this MobX with React (wi
 As of commit `1c3d12f`, `@observer` annotation has been added to support the integration with React.
 
 In my opinion, `@observer` is a syntax sugar that simplifies data binding with React.
+
+---
+
+As of commit `90542db`, `autorun()` has supported asynchronous actions. To use this feature, wrap the **action**, 
+the function that mutates the observables, with `runInAction()`.
