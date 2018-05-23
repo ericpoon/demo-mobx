@@ -54,5 +54,7 @@ In my opinion, `@observer` is a syntax sugar that simplifies data binding with R
 
 ---
 
-As of commit `90542db`, `autorun()` has supported asynchronous actions. To use this feature, wrap the **action**, 
-the function that mutates the observables, with `runInAction()`.
+As of commit `90542db`, `autorun()` has supported asynchronous *autorun functions*.
+If you want to access an observable property in an async manner, wrap the async *autorun function* that
+accesses the observable (via getter) with `runInAction()`.
+> We only need runInAction() when the autorun function accesses an observable in an async manner.
